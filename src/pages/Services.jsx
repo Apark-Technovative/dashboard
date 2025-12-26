@@ -1,19 +1,21 @@
+
 import { useState } from "react";
 import { HiSearch, HiChevronDown } from "react-icons/hi";
 import Sidebar from "../components/SideBar";
 import ServiceTable from "../components/ServiceTable";
+import AddServiceModal from "../components/AddServiceModal";
 
 export default function Services() {
-const [search, setSearch] = useState("");
-const [sort, setSort] = useState("newest");
-
+  const [search, setSearch] = useState("");
+  const [sort, setSort] = useState("newest");
+  const [showModal, setShowModal] = useState(false);
 
   return (
     <div className="flex min-h-screen bg-[#FAFBFF]">
       <Sidebar />
 
       <main className="flex-1 p-8">
-        {/* Top page search */}
+ 
         <div className="flex justify-end mr-[52px] mb-[70px]">
           <div className="relative w-[216px] h-[38px]">
             <HiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
@@ -25,22 +27,22 @@ const [sort, setSort] = useState("newest");
                 text-sm
                 placeholder:text-[#B5B7C0]
                 placeholder:text-[14px]
+                shadow-[0_6px_12px_rgba(226,236,249,0.5)]
                 focus:outline-none focus:ring-2 focus:ring-[#007BFF]
               "
             />
           </div>
         </div>
 
-        {/* Card */}
         <div className="bg-white rounded-2xl shadow-sm mr-[52px] ml-8 p-6">
-          {/* Header row */}
+    
           <div className="flex justify-between items-start mb-6">
             <h2 className="text-xl font-semibold">All Services</h2>
 
             <div className="flex items-center mt-2 mr-24">
-              {/* Search + Sort */}
+              
               <div className="flex items-center gap-2">
-                {/* Search */}
+               
                 <div className="relative w-[216px] h-[38px]">
                   <HiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                   <input
@@ -89,23 +91,29 @@ const [sort, setSort] = useState("newest");
 
               </div>
 
+            
               <div className="ml-10">
-                <button
-                  className="
-                    bg-[#007BFF] text-white px-5 py-2
-                    rounded-lg text-sm font-medium h-[38px]
-                  "
-                >
-                  Add
-                </button>
-              </div>
+              <button
+                onClick={() => setShowModal(true)}
+                className="
+                  ml-6 bg-[#007BFF] text-white px-5 py-2
+                  rounded-lg text-sm font-medium h-[38px]
+                "
+              >
+                Add
+              </button>
+            </div>
             </div>
           </div>
 
-          {/* Table */}
+ 
           <ServiceTable search={search} sort={sort} />
         </div>
       </main>
+
+      {showModal && (
+        <AddServiceModal onClose={() => setShowModal(false)} />
+      )}
     </div>
   );
 }
