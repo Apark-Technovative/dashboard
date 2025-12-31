@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./pages/login";
 import Dashboard from "./pages/Dashboard";
 import Services from "./pages/Services";
-import Income from "./pages/Income";
+import Faq from "./pages/Faq";
 import Promote from "./pages/Promote";
 import ProtectedRoute from "./components/Protectedroute";
 
@@ -33,10 +33,10 @@ export default function App() {
         />
         
         <Route
-          path="/income"
+          path="/faq"
           element={
             <ProtectedRoute>
-              <Income />
+              <Faq />
             </ProtectedRoute>
           }
           />

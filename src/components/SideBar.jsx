@@ -5,7 +5,7 @@ import { logout } from "../features/auth/auth.slice";
 import {
   HiOutlineViewGrid,
   HiOutlineCog,
-  HiOutlineCurrencyDollar,
+ HiOutlineQuestionMarkCircle,
   HiOutlineSpeakerphone,
   HiChevronRight,
   HiChevronDown,
@@ -15,7 +15,7 @@ import {
 const menu = [
   { name: "Dashboard", path: "/", icon: HiOutlineViewGrid },
   { name: "Services", path: "/services", icon: HiOutlineCog },
-  { name: "Income", path: "/income", icon: HiOutlineCurrencyDollar },
+  { name: "Faq", path: "/faq", icon:  HiOutlineQuestionMarkCircle },
   { name: "Promote", path: "/promote", icon: HiOutlineSpeakerphone },
 ];
 
@@ -30,7 +30,8 @@ export default function Sidebar() {
   };
 
   return (
-    <aside className="w-64 bg-white border-r px-6 py-8 flex flex-col">
+    // <aside className="w-64 bg-white border-r px-6 py-8 flex flex-col">
+    <aside className="fixed left-0 top-0 h-screen w-64 bg-white px-6 py-8 flex flex-col">
       <h1 className="text-2xl font-bold mb-12">Dashboard</h1>
 
       <nav className="space-y-2">

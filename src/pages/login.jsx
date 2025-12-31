@@ -1,29 +1,34 @@
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import api from "../api/axios";
 import { HiEye, HiEyeOff } from "react-icons/hi";
-import { login } from "../features/auth/auth.slice";
 
 export default function Login() {
-  const [form, setForm] = useState({ email: "", password: "" });
-  const [showPassword, setShowPassword] = useState(false); 
-  const dispatch = useDispatch();
-  const { loading, error, token } = useSelector((s) => s.auth);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("");
 
-  // Already logged in → redirect
-  if (token) {
-    return <Navigate to="/" replace />;
-  }
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    dispatch(login(form));
+    setError("");
+
+    try {
+     const response= await api.post("/login", { email, password });
+     console.log(response)
+      navigate("/"); 
+    } catch (err)
+     {console.log(err)
+      setError("Invalid email or password");
+    }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <form
-        onSubmit={handleSubmit}
+        onSubmit={handleLogin}
         className="bg-white p-8 w-[400px] shadow"
       >
         {/* EMAIL */}
@@ -34,15 +39,14 @@ export default function Login() {
           <input
             type="email"
             className="w-full border border-[#66666659]/75 p-3 rounded-xl focus:outline-none"
-            onChange={(e) =>
-              setForm({ ...form, email: e.target.value })
-            }
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
           />
         </div>
 
         {/* PASSWORD */}
         <div className="mb-4">
-          {/* Label + Hide/Show */}
           <div className="flex justify-between items-center mb-1">
             <label className="text-sm font-medium text-[#666666]">
               Password
@@ -50,7 +54,7 @@ export default function Login() {
 
             <button
               type="button"
-              onClick={() => setShowPassword(!showPassword)}
+              onClick={() => setShowPassword((p) => !p)}
               className="flex items-center gap-1 text-sm text-gray-500"
             >
               {showPassword ? (
@@ -70,29 +74,28 @@ export default function Login() {
           <input
             type={showPassword ? "text" : "password"}
             className="w-full border border-[#66666659]/75 p-3 rounded-xl focus:outline-none"
-            onChange={(e) =>
-              setForm({ ...form, password: e.target.value })
-            }
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
           />
         </div>
 
         {/* ERROR */}
         {error && (
-          <p className="text-red-500 mb-2 text-sm">
-            {error}
-          </p>
+          <p className="text-red-500 mb-2 text-sm">{error}</p>
         )}
 
         {/* LOGIN BUTTON */}
         <button
-          disabled={loading}
+          type="submit"
+         
           className="w-full bg-[#007BFF] text-white py-3 rounded-xl cursor-pointer font-medium"
         >
-          {loading ? "Logging in..." : "Log in"}
+          Login
         </button>
 
         {/* FORGOT PASSWORD */}
-        <p className="text-center mt-4 text-sm  cursor-pointer underline">
+        <p className="text-center mt-4 text-sm cursor-pointer underline">
           Forget your password?
         </p>
       </form>

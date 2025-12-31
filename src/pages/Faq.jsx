@@ -1,49 +1,56 @@
 import { useState, useEffect} from "react";
 import { HiSearch, HiChevronDown } from "react-icons/hi";
 import Sidebar from "../components/SideBar";
-import ServiceTable  from "../components/ServiceTable";
-import AddServiceModal from "../components/AddServiceModal";
+import FaqTable  from "../components/FaqTable";
+import AddFaqModal from "../components/AddFaqModal";
 import api from "../api/axios";
-
-export default function Services() {
- const [services, setServices] = useState([]);
+ 
+export default function Faq() {
+ const [faqs, setFaqs] = useState([]);
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("newest");
   const [showModal, setShowModal] = useState(false);
-  const [editService, setEditService] = useState(null);
+  const [editFaq, setEditFaq] = useState(null);
 
   /* FETCH */
-  const fetchServices = async () => {
-    const res = await api.get("/getServices");
-    setServices(res.data.data);
-  };
+  const fetchFaqs = async () => {
+  try {
+    const res = await api.get("/faqs");
+    setFaqs(res.data.data);
+  } catch (err) {
+    if (err.response?.status === 401) {
+      console.warn("Not authenticated");
+    }
+  }
+};
+
 
   useEffect(() => {
-    fetchServices();
+    fetchFaqs();
   }, []);
 
   /* SAVE (ADD + EDIT) */
-  const handleSave = async (formData, id) => {
+  const handleSave = async (payload, id) => {
     if (id) {
-      await api.patch(`/services/${id}`, formData);
+      await api.patch(`/faqs/${id}`, payload);
     } else {
-      await api.post("/services", formData);
+      await api.post("/faqs", payload);
     }
 
     setShowModal(false);
-    setEditService(null);
-    fetchServices();
+    setEditFaq(null);
+    fetchFaqs();
   };
 
   /* DELETE */
   const handleDelete = async (id) => {
-    await api.delete(`/services/${id}`);
-    fetchServices();
+    await api.delete(`/faqs/${id}`);
+    fetchFaqs();
   };
 
   /* EDIT */
   const handleEdit = (item) => {
-    setEditService(item);
+    setEditFaq(item);
     setShowModal(true);
   };
 
@@ -54,7 +61,7 @@ export default function Services() {
     <div className="flex min-h-screen bg-[#FAFBFF]">
       <Sidebar />
 
-      <main className=" ml-64 flex-1 p-8 h-screen overflow-y-auto sm:p-6 ">
+      <main className=" ml-64 flex-1 p-8 h-screen overflow-y-auto sm:p- ">
         {/* Top Search */}
         <div className="flex justify-end mr-36 mb-[70px]">
           <div className="relative w-[216px] h-[38px]  ">
@@ -82,7 +89,7 @@ export default function Services() {
         <div className="bg-white rounded-2xl shadow-sm p-4 sm:p-6">
           {/* Header */}
           <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start gap-4 mb-6">
-            <h2 className="text-xl font-semibold">All Services</h2>
+            <h2 className="text-xl font-semibold">FAQS</h2>
 
             <div className="flex flex-wrap items-center gap-2 mt-2 mr-30">
               {/* Search */}
@@ -127,7 +134,10 @@ export default function Services() {
               {/* Add */}
                 <div className="ml-10">
                <button
-              onClick={() => setShowModal(true)}
+              onClick={() => {
+                  setEditFaq(null); 
+                  setShowModal(true);
+                }}
               className="bg-[#007BFF] text-white px-5 py-2 rounded-lg"
             >
               Add
@@ -138,8 +148,8 @@ export default function Services() {
 
           {/* Table */}
           < div className="overflow-x-auto">
-           <ServiceTable
-           data={services}
+           <FaqTable
+           data={faqs}
             search={search}
             sort={sort}
             onDelete={handleDelete}
@@ -152,11 +162,11 @@ export default function Services() {
       {/* Modal */}
      
       {showModal && (
-        <AddServiceModal
-          initialData={editService}
+        <AddFaqModal
+          initialData={editFaq}
           onClose={() => {
             setShowModal(false);
-            setEditService(null);
+            setEditFaq(null);
           }}
           onSave={handleSave}
         />
@@ -164,6 +174,8 @@ export default function Services() {
     </div>
   );
 }
+
+
 
 
 
