@@ -2,12 +2,13 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./pages/login";
 import Dashboard from "./pages/Dashboard";
 import Services from "./pages/Services";
-import Faq from "./pages/Faq";
 import Promote from "./pages/Promote";
-import ProtectedRoute from "./components/Protectedroute";
+import ProtectedRoute from "./components/ProtectedRoute";
+import Faq from "./pages/Faq";
 
 export default function App() {
   return (
+    
     <BrowserRouter>
       <Routes>
         {/* Public route */}

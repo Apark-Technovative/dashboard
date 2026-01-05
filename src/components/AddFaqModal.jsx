@@ -79,7 +79,7 @@ export default function AddFaqModal({ onClose, onSave, initialData, isEdit }) {
             <button
               type="button"
               onClick={handleSubmit}
-              className="bg-[#5932EA] text-white text-sm px-5 py-2 rounded-lg"
+              className="bg-[#5932EA] text-white text-sm px-5 py-2 rounded-lg cursor-pointer"
             >
              {loading ? "Saving..." : "Save"}
             </button>

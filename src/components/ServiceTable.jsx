@@ -60,17 +60,24 @@ export default function ServiceTable({
     </tr>
           </thead>
 
-          <tbody>
+           <tbody>
             {paginatedData.map((item, i) => (
-              <tr key={i} className="border-b border-[#EEEEEE] last:border-none">
-                <td className="py-4 px-4 font-medium break-words">{item.title}</td>
-                <td className="py-4 px-4"> {item.image?.[0] && (
-               <img
-src={`http://localhost:4000/media/${item.image[0]}`}
-   className="w-12 h-12 rounded object-cover"
-/>
-
-              )}</td>
+              <tr
+                key={i}
+                className="border-b border-[#EEEEEE] last:border-none"
+              >
+                <td className="py-4 px-4 font-medium break-words">
+                  {item.title}
+                </td>
+                <td className="py-4 px-4">
+                  {" "}
+                  {item.image?.[0] && (
+                    <img
+                      src={`http://localhost:4000/media/${item.image[0]}`}
+                      className="w-12 h-12 rounded object-cover"
+                    />
+                  )}
+                </td>
 
 
                 <td className="py-4 px-4 line-clamp-2 break-words">{item.description}</td>

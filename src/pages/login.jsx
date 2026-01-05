@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
 import { HiEye, HiEyeOff } from "react-icons/hi";
@@ -10,27 +10,40 @@ export default function Login() {
   const [error, setError] = useState("");
 
   const navigate = useNavigate();
+  async function getAdmin() {
+    try {
+      const response = await api.get("/getAdmin");
+      if (response.status == 200) {
+        navigate("/");
+      } else {
+        navigate("/login");
+      }
+      console.log(response.status);
+    } catch (error) {
+      navigate("/login");
+    }
+  }
+  useEffect(() => {
+    getAdmin();
+  }, []);
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
 
     try {
-     const response= await api.post("/login", { email, password });
-     console.log(response)
-      navigate("/"); 
-    } catch (err)
-     {console.log(err)
+      const response = await api.post("/login", { email, password });
+      console.log(response);
+      navigate("/");
+    } catch (err) {
+      console.log(err);
       setError("Invalid email or password");
     }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <form
-        onSubmit={handleLogin}
-        className="bg-white p-8 w-[400px] shadow"
-      >
+      <form onSubmit={handleLogin} className="bg-white p-8 w-[400px] shadow">
         {/* EMAIL */}
         <div className="mb-5">
           <label className="block text-sm font-medium text-[#666666] mb-1">
@@ -81,14 +94,11 @@ export default function Login() {
         </div>
 
         {/* ERROR */}
-        {error && (
-          <p className="text-red-500 mb-2 text-sm">{error}</p>
-        )}
+        {error && <p className="text-red-500 mb-2 text-sm">{error}</p>}
 
         {/* LOGIN BUTTON */}
         <button
           type="submit"
-         
           className="w-full bg-[#007BFF] text-white py-3 rounded-xl cursor-pointer font-medium"
         >
           Login

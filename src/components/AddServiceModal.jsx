@@ -2,47 +2,50 @@ import { useState, useEffect } from "react";
 
 import { HiX, HiChevronDown } from "react-icons/hi";
 
-export default function AddServiceModal({ onClose, onSave, initialData , isEdit }) {
+export default function AddServiceModal({ onClose, onSave, initialData , isEdit, id }) {
  const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [tag, setTag] = useState("");
   const [status, setStatus] = useState("active");
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
-
-    useEffect(() => {
+  const [removedImage, setRemovedImage] = useState([]);
+  useEffect(() => {
     if (initialData) {
       setTitle(initialData.title);
       setDescription(initialData.description);
       setTag(initialData.tag);
       setStatus(initialData.status);
       if (initialData.image?.[0]) {
-        setPreview(
-         `http://localhost:4000/uploads/${initialData.image[0]}`
-        );
+        setPreview(`http://localhost:4000/media/${initialData.image[0]}`);
       }
     }
   }, [initialData]);
+
+console.log("initial data", initialData);
 
 const handleSubmit = () => {
   if (!image && !initialData) {
     alert("Please upload an image");
     return;
   }
+ console.log(removedImage);
 
   const formData = new FormData();
-  formData.append("title", title);
-  formData.append("description", description);
-  formData.append("tag", tag);
-  formData.append("status", status);
+    formData.append("title", title);
+    formData.append("description", description);
+    formData.append("tag", tag);
+    formData.append("status", status);
+    removedImage.forEach((img) => {
+      formData.append("removedImage[]", img); // The [] indicates it's an array
+    });
 
-  if (image) {
-    formData.append("image", image);
-  }
+    if (image) {
+      formData.append("image", image);
+    }
 
-  onSave(formData, initialData?._id);
-};
-
+    onSave(formData, initialData?._id);
+  };
 
 
   return (
@@ -109,7 +112,7 @@ const handleSubmit = () => {
                 <select
                   value={status}
                   onChange={(e) => setStatus(e.target.value)}
-                  className="w-full border border-[#66666659]/75 rounded-lg px-4 py-2 appearance-none focus:outline-none"
+                  className="w-full border border-[#66666659]/75 rounded-lg px-4 py-2 appearance-none  focus:outline-none cursor-pointer" 
                 >
                   <option value="active">Active</option>
                   <option value="inactive">Inactive</option>
@@ -124,44 +127,61 @@ const handleSubmit = () => {
           </div>
 
           {/* Image */}
-          <div>
-            <label className="block text-sm text-[#666666] mb-2">
-              Image
-            </label>
+           <div>
+            <label className="block text-sm text-[#666666] mb-2">Image</label>
 
             <div className="flex items-center gap-4">
-              <div className="w-20 h-20 bg-gray-200 rounded-lg overflow-hidden flex items-center justify-center">
+              <div className="w-20 h-20 bg-gray-200 rounded-lg  flex items-center justify-center">
                 {preview ? (
-                  <img
-                    src={preview}
-                    alt="Preview"
-                    className="w-full h-full object-cover"
-                  />
+                  <div className="relative h-20 w-20 ">
+                    <img
+                      src={preview}
+                      alt="Preview"
+                      className="w-full h-full object-cover"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setRemovedImage((prev) => {
+                          return [...prev, initialData.image[0]];
+                        });
+                        setPreview(null);
+                      }}
+                      className="absolute -top-1 -right-1 bg-red-500 h-5 w-5 rounded-full cursor-pointer"
+                    >
+                      X
+                    </button>
+                  </div>
                 ) : (
-                  <span className="text-xs text-gray-400">
-                    No Image
-                  </span>
+                  <span className="text-xs text-gray-400">No Image</span>
                 )}
               </div>
 
-              <label className="cursor-pointer border px-4 py-2 rounded-lg text-blue-500 text-sm">
-              
-                 <input
-          type="file"
-          accept="image/*"
-          onChange={(e) => {
-            setImage(e.target.files[0]);
-            setPreview(URL.createObjectURL(e.target.files[0]));
-          }}
-        />
-              </label>
+              {(removedImage.length > 0 || initialData == null) && (
+                <label className="cursor-pointer border px-4 py-2 rounded-lg text-blue-500 text-sm">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => {
+                      // {
+                      //   initialData &&
+                      //     setRemovedImage((prev) => {
+                      //       return [...prev, initialData.image[0]];
+                      //     });
+                      // }
+                      setImage(e.target.files[0]);
+                      setPreview(URL.createObjectURL(e.target.files[0]));
+                    }}
+                  />
+                </label>
+              )}
             </div>
           </div>
 
           {/* Save */}
           <div className="flex justify-end pt-4">
            <button type="button" onClick={handleSubmit}
-              className="bg-[#5932EA] text-white text-sm px-5 py-2 rounded-lg"
+              className="bg-[#5932EA] text-white text-sm px-5 py-2 rounded-lg cursor-pointer"
             >
               Save
             </button>

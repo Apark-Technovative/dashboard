@@ -55,9 +55,9 @@ export default function FaqTable({
         <table className="w-full text-sm table-fixed">
           <thead>
             <tr className="text-gray-400 border-b border-[#EEEEEE]">
-              <th className="text-left py-3 px-4 w-[30%]">Question</th>
-              <th className="text-left py-3 px-4 w-[40%]">Answer</th>
-              <th className="text-left py-3 px-4 w-[10%]">Actions</th>
+              <th className="text-left py-3 px-4 w-[25%]">Question</th>
+              <th className="text-left py-3 px-4 w-[25%]">Answer</th>
+              <th className="text-left py-3 px-4 w-[10%]">Action</th>
             </tr>
           </thead>
 
@@ -129,8 +129,8 @@ export default function FaqTable({
             <button
               key={i}
               onClick={() => setPage(i + 1)}
-              className={`w-8 h-8 rounded-md text-sm
-                ${page === i + 1 ? "bg-[#5932EA] text-white" : "border"}`}
+              className={`w-8 h-8 rounded-md text-sm cursor-pointer
+                ${page === i + 1 ? "bg-[#5932EA] text-white" : "border"} `}
             >
               {i + 1}
             </button>

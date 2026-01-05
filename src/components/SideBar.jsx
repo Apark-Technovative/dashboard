@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { logout } from "../features/auth/auth.slice";
+import api from "../api/axios";
+
 import {
   HiOutlineViewGrid,
   HiOutlineCog,
@@ -11,7 +12,6 @@ import {
   HiChevronDown,
   HiLogout,
 } from "react-icons/hi";
-
 const menu = [
   { name: "Dashboard", path: "/", icon: HiOutlineViewGrid },
   { name: "Services", path: "/services", icon: HiOutlineCog },
@@ -24,10 +24,14 @@ export default function Sidebar() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    dispatch(logout());
+ const handleLogout = async () => {
+  try {
+    await api.post("/logout"); // clears httpOnly cookie
     navigate("/login");
-  };
+  } catch (error) {
+    console.error("Logout failed", error);
+  }
+};
 
   return (
     // <aside className="w-64 bg-white border-r px-6 py-8 flex flex-col">
