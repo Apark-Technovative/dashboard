@@ -8,6 +8,7 @@ import {
   HiOutlineCog,
  HiOutlineQuestionMarkCircle,
   HiOutlineSpeakerphone,
+  HiUserGroup,
   HiChevronRight,
   HiChevronDown,
   HiLogout,
@@ -17,6 +18,7 @@ const menu = [
   { name: "Services", path: "/services", icon: HiOutlineCog },
   { name: "Faq", path: "/faq", icon:  HiOutlineQuestionMarkCircle },
   { name: "Promote", path: "/promote", icon: HiOutlineSpeakerphone },
+  { name: "Teams", path: "/team", icon: HiUserGroup },
 ];
 
 export default function Sidebar() {

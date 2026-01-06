@@ -42,7 +42,7 @@ export default function AddFaqModal({ onClose, onSave, initialData, isEdit }) {
         {/* Close */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 cursor-pointer"
         >
           <HiX size={20} />
         </button>

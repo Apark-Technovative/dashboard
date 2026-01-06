@@ -5,6 +5,7 @@ import Services from "./pages/Services";
 import Promote from "./pages/Promote";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Faq from "./pages/Faq";
+import Team from "./pages/Team";
 
 export default function App() {
   return (
@@ -50,6 +51,17 @@ export default function App() {
             </ProtectedRoute>
           }
           />
+          
+            <Route
+          path="/team"
+          element={
+            <ProtectedRoute>
+              <Team />
+            </ProtectedRoute>
+          }
+          />
+
+          
       </Routes>
     </BrowserRouter>
   );

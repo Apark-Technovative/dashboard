@@ -1,3 +1,4 @@
+
 import { useMemo, useState } from "react";
 import {
   HiTrash,
@@ -9,8 +10,9 @@ import {
 
 
 const PAGE_SIZE = 6;
+const IMAGE_URL = import.meta.env.VITE_API_IMAGE_URL;
 
-export default function ServiceTable({
+export default function TeamTable({
   data = [],
   search = "",
   sort = "newest",
@@ -52,11 +54,10 @@ export default function ServiceTable({
         <table className="w-full text-sm table-fixed">
           <thead>
             <tr className="text-gray-400 border-b border-[#EEEEEE]">
-            <th className="text-left py-3 px-4 w-[20%]">Title</th>
-    <th className="text-left py-3 px-4 w-[10%]">Image</th>
-    <th className="text-left py-3 px-4 w-[30%]">Description</th>
-    <th className="text-left py-3 px-4 w-[15%]">Status</th>
-    <th className="text-left py-3 px-4 w-[15%]">Action</th>
+             <th className="text-left py-3 px-4 w-[30%]">Team Member Name</th>
+              <th className="text-left py-3 px-4 w-[30%]">Position</th>
+              <th className="text-left py-3 px-4 w-[15%]">Status</th>
+              <th className="text-left py-3 px-4 w-[15%]">Action</th>
     </tr>
           </thead>
 
@@ -69,15 +70,7 @@ export default function ServiceTable({
                 <td className="py-4 px-4 font-medium break-words">
                   {item.title}
                 </td>
-                <td className="py-4 px-4">
-                  {" "}
-                  {item.image?.[0] && (
-                    <img
-                      src={`http://localhost:4000/media/${item.image[0]}`}
-                      className="w-12 h-12 rounded object-cover"
-                    />
-                  )}
-                </td>
+               
 
 
                 <td className="py-4 px-4 line-clamp-2 break-words">{item.description}</td>
@@ -96,12 +89,12 @@ export default function ServiceTable({
 
                 </td>
                 <td className="py-4 px-4"> 
-                <td className="flex gap-4 text-lg">
+                <div className="flex gap-4 text-lg">
                   <HiTrash   onClick={() => onDelete(item._id)} 
                   className="text-red-500 cursor-pointer" />
                   <HiPencil   onClick={() => onEdit(item) } 
                   className="text-gray-600 cursor-pointer" />
-                  </td>
+                  </div>
                 </td>
               </tr>
             ))}

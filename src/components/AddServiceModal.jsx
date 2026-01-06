@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 
 import { HiX, HiChevronDown } from "react-icons/hi";
 
+const IMAGE_URL = import.meta.env.VITE_API_IMAGE_URL;
+
 export default function AddServiceModal({ onClose, onSave, initialData , isEdit, id }) {
  const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -17,18 +19,41 @@ export default function AddServiceModal({ onClose, onSave, initialData , isEdit,
       setTag(initialData.tag);
       setStatus(initialData.status);
       if (initialData.image?.[0]) {
-        setPreview(`http://localhost:4000/media/${initialData.image[0]}`);
+       setPreview(`${IMAGE_URL}/${initialData.image[0]}`);
       }
     }
   }, [initialData]);
 
 console.log("initial data", initialData);
-
 const handleSubmit = () => {
-  if (!image && !initialData) {
-    alert("Please upload an image");
-    return;
+
+  if (!initialData) {
+    if (!title.trim()) {
+      alert("Title is required");
+      return;
+    }
+
+    if (!description.trim()) {
+      alert("Description is required");
+      return;
+    }
+
+    if (!tag.trim()) {
+      alert("Tag is required");
+      return;
+    }
+
+    if (!status) {
+      alert("Status is required");
+      return;
+    }
+
+    if (!image) {
+      alert("Please upload an image");
+      return;
+    }
   }
+
  console.log(removedImage);
 
   const formData = new FormData();
@@ -54,7 +79,7 @@ const handleSubmit = () => {
         {/* Close */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 cursor-pointer"
         >
           <HiX size={20} />
         </button>
