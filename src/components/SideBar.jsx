@@ -2,7 +2,7 @@ import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import api from "../api/axios";
-
+import { BsChatQuote } from "react-icons/bs";
 import {
   HiOutlineViewGrid,
   HiOutlineCog,
@@ -11,7 +11,6 @@ import {
   HiUserGroup,
   HiChevronRight,
   HiChevronDown,
-  HiLogout,
 } from "react-icons/hi";
 const menu = [
   { name: "Dashboard", path: "/", icon: HiOutlineViewGrid },
@@ -19,6 +18,7 @@ const menu = [
   { name: "Faq", path: "/faq", icon:  HiOutlineQuestionMarkCircle },
   { name: "Promote", path: "/promote", icon: HiOutlineSpeakerphone },
   { name: "Teams", path: "/team", icon: HiUserGroup },
+  { name: "Quotes", path: "/quotes", icon: BsChatQuote  },
 ];
 
 export default function Sidebar() {
@@ -69,7 +69,7 @@ export default function Sidebar() {
               className="w-10 h-10 rounded-full"
             />
             <div>
-              <p className="text-sm font-semibold">John Doe</p>
+              {/* <p className="text-sm font-semibold">Admin Name</p> */}
               <p className="text-xs text-gray-500">Admin</p>
             </div>
           </div>
@@ -82,11 +82,11 @@ export default function Sidebar() {
         {open && (
           <button
             onClick={handleLogout}
-            className="absolute bottom-14 left-0 w-full
-                       flex items-center gap-2 px-4 py-2
-                       text-red-600 hover:bg-gray-100"
+            className="absolute bottom-14 left-0 w-full 
+                       flex  gap-2 pl-11 py-2
+                       text-red-700 rounded-lg cursor-pointer hover:bg-gray-100"
           >
-            <HiLogout />
+            
             Logout
           </button>
         )}

@@ -11,7 +11,7 @@ import {
 const PAGE_SIZE = 6;
 const IMAGE_URL = import.meta.env.VITE_API_IMAGE_URL;
 
-export default function ServicesTable({
+export default function QuoteTable({
   data = [],
   search = "",
   sort = "newest",
@@ -53,9 +53,10 @@ export default function ServicesTable({
         <table className="w-full text-sm table-fixed">
           <thead>
             <tr className="text-gray-400 border-b border-[#EEEEEE]">
-            <th className="text-left py-3 px-4 w-[20%]">Title</th>
-    <th className="text-left py-3 px-4 w-[10%]">Image</th>
-    <th className="text-left py-3 px-4 w-[30%]">Description</th>
+            <th className="text-left py-3 px-4 w-[15%]">Name</th>
+    <th className="text-left py-3 px-4 w-[15%]">Phone</th>
+    <th className="text-left py-3 px-4 w-[15%]">Service Type</th>
+    <th className="text-left py-3 px-4 w-[15%]">Message</th>
     <th className="text-left py-3 px-4 w-[15%]">Status</th>
     <th className="text-left py-3 px-4 w-[15%]">Action</th>
     </tr>
@@ -70,15 +71,13 @@ export default function ServicesTable({
                 <td className="py-4 px-5 font-medium break-words">
                   {item.title}
                 </td>
-                <td className="py-4 px-5">
-                  {" "}
-                  {item.image?.[0] && (
-                    <img
-                       src={`${IMAGE_URL}/${item.image[0]}`}
-                      className="w-12 h-12 rounded object-cover"
-                    />
-                  )}
+                <td className="py-4 px-5 font-medium break-words">
+                  {item.title}
                 </td>
+                <td className="py-4 px-5 font-medium break-words">
+                  {item.title}
+                </td>
+                
 
 
                 <td className="py-4 px-5 line-clamp-2 break-words">{item.description}</td>

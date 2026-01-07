@@ -6,6 +6,7 @@ import Promote from "./pages/Promote";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Faq from "./pages/Faq";
 import Team from "./pages/Team";
+import Quotes from "./pages/Quotes";
 
 export default function App() {
   return (
@@ -57,6 +58,15 @@ export default function App() {
           element={
             <ProtectedRoute>
               <Team />
+            </ProtectedRoute>
+          }
+          />
+
+ <Route
+          path="/quotes"
+          element={
+            <ProtectedRoute>
+              <Quotes />
             </ProtectedRoute>
           }
           />

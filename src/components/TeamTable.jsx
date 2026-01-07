@@ -67,14 +67,14 @@ export default function TeamTable({
                 key={i}
                 className="border-b border-[#EEEEEE] last:border-none"
               >
-                <td className="py-4 px-4 font-medium break-words">
+                <td className="py-4 px-5 font-medium break-words">
                   {item.title}
                 </td>
                
 
 
-                <td className="py-4 px-4 line-clamp-2 break-words">{item.description}</td>
-                <td className="py-4 px-4">
+                <td className="py-4 px-5 line-clamp-2 break-words">{item.description}</td>
+                <td className="py-4 px-5">
                  <span
   className={`w-18 h-8 flex items-center justify-center rounded-sm 
     text-sm border font-semibold
@@ -88,7 +88,7 @@ export default function TeamTable({
 </span>
 
                 </td>
-                <td className="py-4 px-4"> 
+                <td className="py-4 px-5"> 
                 <div className="flex gap-4 text-lg">
                   <HiTrash   onClick={() => onDelete(item._id)} 
                   className="text-red-500 cursor-pointer" />

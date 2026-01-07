@@ -1,12 +1,12 @@
 import { useState, useEffect} from "react";
 import Sidebar from "../components/SideBar";
-import ServicesTable from "../components/ServicesTable";
+import QuoteTable from "../components/QuoteTable";
 import AddServiceModal from "../components/AddServiceModal";
 import TopSearch from "../components/TopSearch";
 import SearchSort from "../components/SearchSort";
 import api from "../api/axios";
 
-export default function Services() {
+export default function Quotes() {
  const [services, setServices] = useState([]);
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("newest");
@@ -64,7 +64,7 @@ export default function Services() {
         <div className="bg-white rounded-2xl shadow-sm p-4 sm:p-6">
           {/* Header */}
           <SearchSort
-            title="All Services"
+            title="Quotes"
             search={search}
             sort={sort}
             onSearch={setSearch}
@@ -75,7 +75,7 @@ export default function Services() {
 
           {/* Table */}
           < div className="overflow-x-auto">
-           <ServicesTable
+           <QuoteTable
            data={services}
             search={search}
             sort={sort}

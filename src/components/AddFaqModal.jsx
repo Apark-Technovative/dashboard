@@ -56,7 +56,7 @@ export default function AddFaqModal({ onClose, onSave, initialData, isEdit }) {
             <div>
               <label className="block text-sm text-[#666666] mb-1">Question</label>
               <input
-                className="w-full border border-[#66666659]/75 rounded-lg px-4 py-2 focus:outline-none"
+                className="w-full border border-[#66666659]/75 rounded-lg px-4 py-2 "
                 value={question}
                 onChange={(e) => setQuestion(e.target.value)}
               />
@@ -67,7 +67,7 @@ export default function AddFaqModal({ onClose, onSave, initialData, isEdit }) {
                Answer
               </label>
               <input
-                className="w-full border border-[#66666659]/75 rounded-lg px-4 py-2 focus:outline-none"
+                className="w-full border border-[#66666659]/75 rounded-lg px-4 py-2 "
                 value={answer}
                 onChange={(e) => setAnswer(e.target.value)}
               />

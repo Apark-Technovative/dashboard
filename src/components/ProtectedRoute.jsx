@@ -1,17 +1,18 @@
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import api from "../api/axios";
 import Sidebar from "./SideBar";
 
 export default function ProtectedRoute({ children }) {
   const navigate = useNavigate();
+  const { pathname } = useLocation();
 
   async function getAdmin() {
     try {
       const response = await api.get("/getAdmin");
       if (response.status == 200) {
-        navigate("/");
+        navigate(pathname);
       } else {
         navigate("/login");
       }
