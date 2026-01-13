@@ -1,4 +1,5 @@
 import { useMemo, useState, useEffect } from "react";
+import { toast } from "react-toastify";
 import {
   HiTrash,
   HiPencil,
@@ -48,6 +49,43 @@ export default function FaqTable({
   const start = (page - 1) * PAGE_SIZE;
   const paginatedData = filteredData.slice(start, start + PAGE_SIZE);
 
+  const handleDelete = (id) => {
+    toast(
+      ({ closeToast }) => (
+        <div>
+          <p className="text-sm font-medium mb-2">
+            Are you sure you want to delete this service?
+          </p>
+  
+          <div className="flex gap-2 justify-end">
+            <button
+              onClick={() => {
+                onDelete(id);
+                toast.success("Service deleted");
+                closeToast();
+              }}
+              className="px-3 py-1 text-sm bg-red-600 text-white rounded cursor-pointer"
+            >
+              Delete
+            </button>
+  
+            <button
+              onClick={closeToast}
+              className="px-3 py-1 text-sm bg-gray-300 rounded cursor-pointer"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      ),
+      {
+        autoClose: false,
+        closeOnClick: false,
+      }
+    );
+  };
+  
+
   return (
     <div className="mt-4">
       {/* TABLE */}
@@ -79,14 +117,14 @@ export default function FaqTable({
 
                 <td className="py-3 px-5">
                   <div className="flex gap-4 text-lg">
-                    <HiTrash
-                      onClick={() => onDelete(item._id)}
-                      className="text-red-500 cursor-pointer"
+                 <HiTrash
+                      onClick={() => handleDelete(item._id)}
+                      className="text-red-500 cursor-pointer hover:scale-110 transition"
                     />
-                    <HiPencil
-                      onClick={() => onEdit(item)}
-                      className="text-gray-600 cursor-pointer"
-                    />
+                    
+                  <HiPencil   onClick={() => onEdit(item) } 
+                  className="text-gray-600 cursor-pointer hover:scale-110 transition" />
+                  
                   </div>
                 </td>
               </tr>

@@ -4,12 +4,11 @@
 import { useState, useEffect } from "react";
 
 import { HiX } from "react-icons/hi";
-
+import { toast } from "react-toastify";
 export default function AddFaqModal({ onClose, onSave, initialData, isEdit }) {
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
   const [loading, setLoading] = useState(false);
-
 
   useEffect(() => {
     if (initialData) {
@@ -22,19 +21,62 @@ export default function AddFaqModal({ onClose, onSave, initialData, isEdit }) {
   }, [initialData]);
 
   const handleSubmit = async () => {
-    if (!question.trim() || !answer.trim()) {
-      alert("Please fill all fields");
-      return;
-    }
+  if (!question.trim() || !answer.trim()) {
+    alert("Please fill all fields");
+    return;
+  }
 
-    setLoading(true);
-
-     await onSave(
-      { question: question.trim(), answer: answer.trim() },
-      initialData?._id
-    );
-    setLoading(false);
+  const payload = {
+    question: question.trim(),
+    answer: answer.trim(),
   };
+
+ 
+  if (!initialData) {
+    setLoading(true);
+    await onSave(payload);
+    setLoading(false);
+    toast.success("FAQ added successfully");
+    return;
+  }
+
+ 
+  toast(
+    ({ closeToast }) => (
+      <div>
+        <p className="text-sm font-medium mb-3">
+          Are you sure you want to edit this FAQ?
+        </p>
+
+        <div className="flex gap-2 justify-end">
+          <button
+            onClick={async () => {
+              setLoading(true);
+              await onSave(payload, initialData._id);
+              setLoading(false);
+              toast.success("FAQ updated successfully");
+              closeToast();
+            }}
+            className="px-3 py-1 text-sm bg-[#5932EA] text-white rounded cursor-pointer"
+          >
+            Yes
+          </button>
+
+          <button
+            onClick={closeToast}
+            className="px-3 py-1 text-sm bg-gray-300 rounded cursor-pointer"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    ),
+    {
+      autoClose: false,
+      closeOnClick: false,
+    }
+  );
+};
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">

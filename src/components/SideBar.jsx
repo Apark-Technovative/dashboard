@@ -7,7 +7,6 @@ import {
   HiOutlineViewGrid,
   HiOutlineCog,
  HiOutlineQuestionMarkCircle,
-  HiOutlineSpeakerphone,
   HiUserGroup,
   HiChevronRight,
   HiChevronDown,
@@ -16,7 +15,6 @@ const menu = [
   { name: "Dashboard", path: "/", icon: HiOutlineViewGrid },
   { name: "Services", path: "/services", icon: HiOutlineCog },
   { name: "Faq", path: "/faq", icon:  HiOutlineQuestionMarkCircle },
-  { name: "Promote", path: "/promote", icon: HiOutlineSpeakerphone },
   { name: "Teams", path: "/team", icon: HiUserGroup },
   { name: "Quotes", path: "/quotes", icon: BsChatQuote  },
 ];

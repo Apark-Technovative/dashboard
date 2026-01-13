@@ -1,36 +1,30 @@
+
+
+
+
 import { useState, useEffect, useRef } from "react";
 import { HiX, HiChevronDown } from "react-icons/hi";
 import { toast } from "react-toastify";
 
 const IMAGE_URL = import.meta.env.VITE_API_IMAGE_URL;
 
-export default function AddServiceModal({ onClose, onSave, initialData }) {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [tag, setTag] = useState("");
+export default function AddTeamModal({ onClose, onSave, initialData }) {
+  const [name, setName] = useState("");
+  const [position, setPosition] = useState("");
+    const [description, setDescription] = useState("");
   const [status, setStatus] = useState("active");
-  const [image, setImage] = useState(null);      
-  const [preview, setPreview] = useState(null);  
+  const [image, setImage] = useState(null);
+  const [preview, setPreview] = useState(null);
   const [removedImage, setRemovedImage] = useState([]);
 
   const fileInputRef = useRef(null);
 
-  /* Populate edit data */
   useEffect(() => {
     if (!initialData) return;
 
-    setTitle(initialData.title || "");
+    setName(initialData.name || "");
+    setPosition(initialData.position || "");
     setDescription(initialData.description || "");
-
-    // normalize tag safely
-    setTag(
-      typeof initialData.tag === "string"
-        ? initialData.tag
-        : Array.isArray(initialData.tag)
-        ? initialData.tag.join(", ")
-        : ""
-    );
-
     setStatus(initialData.status || "active");
 
     if (initialData.image?.[0]) {
@@ -39,46 +33,44 @@ export default function AddServiceModal({ onClose, onSave, initialData }) {
   }, [initialData]);
 
   /* Submit */
-  const handleSubmit = () => {
-    if (!String(title).trim()) return alert("Title is required");
-    if (!String(description).trim()) return alert("Description is required");
-    if (!String(tag).trim()) return alert("Tag is required");
+  const handleSubmit = async () => {
+  if (!name.trim()) return alert("Name is required");
+  if (!position.trim()) return alert("Position is required");
+  if (!description.trim()) return alert("Description is required");
+  if (!preview) return alert("Please upload an image");
 
-    if (!preview) return alert("Please upload an image");
+  const formData = new FormData();
+  formData.append("name", name);
+  formData.append("position", position);
+  formData.append("description", description);
 
-    const formData = new FormData();
-    formData.append("title", title);
-    formData.append("description", description);
-    formData.append("tag", tag);
-    formData.append("status", status);
+  removedImage.forEach((img) => {
+    formData.append("removedImage[]", img);
+  });
 
-    removedImage.forEach((img) => {
-      formData.append("removedImage[]", img);
-    });
+  if (image) {
+    formData.append("image", image);
+  }
 
-    if (image) {
-      formData.append("image", image);
-    }
- 
+  try {
     if (!initialData) {
-      onSave(formData);
-      toast.success("Service added successfully");
+      await onSave(formData); 
+      toast.success("Team member added successfully");
       return;
     }
 
-  
     toast(
       ({ closeToast }) => (
         <div>
           <p className="text-sm font-medium mb-2">
-            Are you sure you want to edit this service?
+             Are you sure you want to update the Team Member?
           </p>
 
           <div className="flex gap-2 justify-end">
             <button
-              onClick={() => {
-                onSave(formData, initialData._id);
-                toast.success("Service updated successfully");
+              onClick={async () => {
+                await onSave(formData, initialData._id);
+                toast.success("Team Member updated successfully");
                 closeToast();
               }}
               className="px-3 py-1 text-sm bg-[#5932EA] text-white rounded cursor-pointer"
@@ -95,12 +87,13 @@ export default function AddServiceModal({ onClose, onSave, initialData }) {
           </div>
         </div>
       ),
-      {
-        autoClose: false,
-        closeOnClick: false,
-      }
+      { autoClose: false, closeOnClick: false }
     );
-  };
+  } catch (err) {
+    toast.error("Failed to save team member");
+    console.error(err);
+  }
+};
 
   /* Remove image */
   const handleRemoveImage = () => {
@@ -148,23 +141,33 @@ export default function AddServiceModal({ onClose, onSave, initialData }) {
         </button>
 
         <h2 className="text-lg mb-6">
-          {initialData ? "Edit Service" : "Add Service"}
+          {initialData ? "Edit Team Member" : "Add Team Member"}
         </h2>
 
         <form className="space-y-6">
-          {/* Title + Description */}
+          {/* Name + Position */}
           <div className="grid grid-cols-2 gap-6">
             <div>
-              <label className="block text-sm text-[#666666] mb-1">
-                Title
-              </label>
+              <label className="block text-sm mb-1">Name</label>
               <input
                 className="w-full border  border-[#66666659]/75 rounded-lg px-4 py-2"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
+                value={name}
+                onChange={(e) => setName(e.target.value)}
               />
             </div>
+             <div>
+              <label className="block text-sm mb-1">Position</label>
+              <input
+                className="w-full border  border-[#66666659]/75 rounded-lg px-4 py-2"
+                value={position}
+                onChange={(e) => setPosition(e.target.value)}
+              />
+            </div>
+            
+          </div>
 
+          {/* Tag + Status */}
+          <div className="grid grid-cols-2 gap-6">
             <div>
               <label className="block text-sm text-[#666666] mb-1">
                 Description
@@ -173,20 +176,6 @@ export default function AddServiceModal({ onClose, onSave, initialData }) {
                 className="w-full border  border-[#66666659]/75 rounded-lg px-4 py-2"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-              />
-            </div>
-          </div>
-
-          {/* Tag + Status */}
-          <div className="grid grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm text-[#666666] mb-1">
-                Tag
-              </label>
-              <input
-                className="w-full border  border-[#66666659]/75 rounded-lg px-4 py-2"
-                value={tag}
-                onChange={(e) => setTag(e.target.value)}
               />
             </div>
 
@@ -281,6 +270,7 @@ export default function AddServiceModal({ onClose, onSave, initialData }) {
     </div>
   );
 }
+
 
 
 

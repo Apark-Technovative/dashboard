@@ -2,7 +2,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./pages/login";
 import Dashboard from "./pages/Dashboard";
 import Services from "./pages/Services";
-import Promote from "./pages/Promote";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Faq from "./pages/Faq";
 import Team from "./pages/Team";
@@ -44,14 +43,6 @@ export default function App() {
           }
           />
 
-          <Route
-          path="/promote"
-          element={
-            <ProtectedRoute>
-              <Promote />
-            </ProtectedRoute>
-          }
-          />
           
             <Route
           path="/team"
