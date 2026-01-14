@@ -5,8 +5,8 @@ export default function TopSearch({ onSearch }) {
   const [search, setSearch] = useState("");
 
   return (
-    <div className="flex justify-end mr-36 mb-[70px]">
-      <div className="relative w-[216px] h-[38px]">
+    <div className="flex justify-end  mb-[70px]">
+      <div className="relative w-[260px] h-[40px]">
         <HiSearch
           size={22}
           className="absolute left-3 top-1/2 -translate-y-1/2 text-[#7E7E7E]"

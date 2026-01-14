@@ -87,48 +87,46 @@ export default function FaqTable({
   
 
   return (
-    <div className="mt-4">
-      {/* TABLE */}
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm table-fixed">
-          <thead>
-            <tr className="text-gray-400 border-b border-[#EEEEEE]">
-              <th className="text-left py-3 px-4 w-[25%]">Question</th>
-              <th className="text-left py-3 px-4 w-[25%]">Answer</th>
-              <th className="text-left py-3 px-4 w-[10%]">Action</th>
-            </tr>
-          </thead>
+    <div className="w-full mt-4">
+  {/* TABLE */}
+  <div className="w-full overflow-x-auto">
+    <table className="w-full table-fixed text-sm">
+      <thead>
+        <tr className="text-gray-400 border-b border-[#EEEEEE]">
+          <th className="w-[40%] px-4 py-3 text-left">Question</th>
+          <th className="w-[40%] px-4 py-3 text-left">Answer</th>
+          <th className="w-[9%] px-4 py-3 text-center">Action</th>
+        </tr>
+      </thead>
 
-          <tbody>
-            {paginatedData.map((item) => (
-              <tr
-                key={item._id}
-                className="border-b border-[#EEEEEE] last:border-none"
-              >
-                <td className="py-3 px-5 font-medium break-words">
-                  {item.question}
-                </td>
+      <tbody>
+        {paginatedData.map((item) => (
+          <tr
+            key={item._id}
+            className="border-b border-[#EEEEEE] last:border-none"
+          >
+            <td className="px-4 py-4 font-medium break-words">
+              {item.question}
+            </td>
 
-                <td className="py-3 px-5">
-                  <p className="line-clamp-2 break-words">
-                    {item.answer}
-                  </p>
-                </td>
+            <td className="px-4 py-4 break-words line-clamp-2">
+              {item.answer}
+            </td>
 
-                <td className="py-3 px-5">
-                  <div className="flex gap-4 text-lg">
-                 <HiTrash
-                      onClick={() => handleDelete(item._id)}
-                      className="text-red-500 cursor-pointer hover:scale-110 transition"
-                    />
-                    
-                  <HiPencil   onClick={() => onEdit(item) } 
-                  className="text-gray-600 cursor-pointer hover:scale-110 transition" />
-                  
-                  </div>
-                </td>
-              </tr>
-            ))}
+            <td className="px-4 py-4 text-center">
+              <div className="flex justify-center gap-4 text-lg">
+                <HiTrash
+                  onClick={() => handleDelete(item._id)}
+                  className="text-red-500 cursor-pointer hover:scale-110 transition"
+                />
+                <HiPencil
+                  onClick={() => onEdit(item)}
+                  className="text-gray-600 cursor-pointer hover:scale-110 transition"
+                />
+              </div>
+            </td>
+          </tr>
+        ))}
 
             {paginatedData.length === 0 && (
               <tr>

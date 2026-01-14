@@ -12,7 +12,7 @@ export default function SearchSort({
     <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start gap-4 mb-6">
       <h2 className="text-xl font-semibold">{title}</h2>
 
-      <div className="flex flex-wrap items-center gap-2 mt-2 mr-30">
+      <div className="flex flex-wrap items-center gap-2 mt-2 mr-8">
         {/* Search */}
         <div className="relative w-full sm:w-[216px] h-[38px]">
           <HiSearch

@@ -93,14 +93,15 @@ export default function TeamTable({
       <div className="overflow-x-auto">
         <table className="w-full text-sm table-fixed">
           <thead>
-            <tr className="text-gray-400 border-b border-[#EEEEEE]">
-             <th className="text-left py-3 px-4 w-[20%]">Team Member Name</th>
-              <th className="text-left py-3 px-4 w-[20%]">Position</th>
-              <th className="text-left py-3 px-4 w-[30%]">Description</th>
-              <th className="text-left py-3 px-4 w-[15%]">Status</th>
-              <th className="text-left py-3 px-4 w-[15%]">Action</th>
+           < tr className="text-gray-400 border-b border-[#EEEEEE]">
+              <th className="w-[22%] px-4 py-3 text-left">Team Member Name</th>
+              <th className="w-[18%] px-4 py-3 text-left">Position</th>
+              <th className="w-[35%] px-4 py-3 text-left">Description</th>
+              <th className="w-[15%] px-4 py-3 text-center">Status</th>
+              <th className="w-[10%] px-4 py-3 text-center">Action</th>
     </tr>
           </thead>
+          
 
            <tbody>
             {paginatedData.map((item, i) => (

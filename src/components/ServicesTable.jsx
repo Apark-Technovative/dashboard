@@ -86,65 +86,68 @@ export default function ServicesTable({
 
 
   return (
-    <div className="mt-4">
+   <div className="w-full mt-4">
       {/* TABLE */}
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm table-fixed">
+      <div className="w-full overflow-x-auto">
+        <table className="w-full table-fixed text-sm">
           <thead>
             <tr className="text-gray-400 border-b border-[#EEEEEE]">
-            <th className="text-left py-3 px-4 w-[20%]">Title</th>
-    <th className="text-left py-3 px-4 w-[10%]">Image</th>
-    <th className="text-left py-3 px-4 w-[30%]">Description</th>
-    <th className="text-left py-3 px-4 w-[15%]">Status</th>
-    <th className="text-left py-3 px-4 w-[15%]">Action</th>
-    </tr>
+              <th className="w-[22%] px-4 py-3 text-left">Title</th>
+              <th className="w-[18%] px-4 py-3 text-left">Image</th>
+              <th className="w-[35%] px-4 py-3 text-left">Description</th>
+              <th className="w-[15%] px-4 py-3 text-center">Status</th>
+              <th className="w-[10%] px-4 py-3 text-center">Action</th>
+            </tr>
           </thead>
 
-           <tbody>
+          <tbody>
             {paginatedData.map((item, i) => (
               <tr
                 key={i}
                 className="border-b border-[#EEEEEE] last:border-none"
               >
-                
-                <td className="py-4 px-5 font-medium break-words">
+                <td className="px-4 py-4 font-medium break-words">
                   {item.title}
                 </td>
-                <td className="py-4 px-5">
-                  {" "}
+
+                <td className="px-4 py-4">
                   {item.image?.[0] && (
                     <img
-                       src={`${IMAGE_URL}/${item.image[0]}`}
+                      src={`${IMAGE_URL}/${item.image[0]}`}
                       className="w-12 h-12 rounded object-cover"
                     />
                   )}
                 </td>
 
-
-                <td className="py-4 px-5 line-clamp-2 break-words">{item.description}</td>
-                <td className="py-4 px-5">
-                 <span
-  className={`w-18 h-8 flex items-center justify-center rounded-sm 
-    text-sm border font-semibold
-    ${
-      item.status === "active"
-        ? "bg-[#16C098]/[0.38] border-[#00B087] text-[#008767]"
-        : "bg-[#FFC5C5] border-[#DF0404] text-[#DF0404]"
-    }`}
->
-  {item.status.charAt(0).toUpperCase() + item.status.slice(1)}
-</span>
-
+                <td className="px-4 py-4 break-words line-clamp-2">
+                  {item.description}
                 </td>
-                <td className="py-4 px-5"> 
-                <div className="flex gap-4 text-lg">
-                   <HiTrash
+
+                <td className="px-4 py-4 text-center">
+                  <span
+                    className={`min-w-[80px] h-8 inline-flex items-center justify-center rounded-sm 
+                      text-sm border font-semibold
+                      ${
+                        item.status === "active"
+                          ? "bg-[#16C098]/30 border-[#00B087] text-[#008767]"
+                          : "bg-[#FFC5C5] border-[#DF0404] text-[#DF0404]"
+                      }`}
+                  >
+                    {item.status.charAt(0).toUpperCase() +
+                      item.status.slice(1)}
+                  </span>
+                </td>
+
+                <td className="px-4 py-4 text-center">
+                  <div className="flex justify-center gap-4 text-lg">
+                    <HiTrash
                       onClick={() => handleDelete(item._id)}
                       className="text-red-500 cursor-pointer hover:scale-110 transition"
                     />
-                    
-                  <HiPencil   onClick={() => onEdit(item) } 
-                  className="text-gray-600 cursor-pointer hover:scale-110 transition" />
+                    <HiPencil
+                      onClick={() => onEdit(item)}
+                      className="text-gray-600 cursor-pointer hover:scale-110 transition"
+                    />
                   </div>
                 </td>
               </tr>
