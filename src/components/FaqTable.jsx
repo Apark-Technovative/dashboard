@@ -105,15 +105,15 @@ export default function FaqTable({
             key={item._id}
             className="border-b border-[#EEEEEE] last:border-none"
           >
-            <td className="px-4 py-4 font-medium break-words">
+            <td className="py-4 px-5 font-medium break-words">
               {item.question}
             </td>
 
-            <td className="px-4 py-4 break-words line-clamp-2">
+            <td className="py-4 px-5 break-words line-clamp-2">
               {item.answer}
             </td>
 
-            <td className="px-4 py-4 text-center">
+            <td className="py-4 px-5 text-center">
               <div className="flex justify-center gap-4 text-lg">
                 <HiTrash
                   onClick={() => handleDelete(item._id)}

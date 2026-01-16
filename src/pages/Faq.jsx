@@ -31,6 +31,10 @@ export default function Faq() {
     fetchFaqs();
   }, []);
 
+  useEffect(() => {
+    document.title = "Faq | Admin Panel";
+  }, []);
+
   /* SAVE (ADD + EDIT) */
   const handleSave = async (payload, id) => {
     if (id) {

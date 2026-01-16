@@ -5,7 +5,7 @@ import Services from "./pages/Services";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Faq from "./pages/Faq";
 import Team from "./pages/Team";
-import Quotes from "./pages/Quotes";
+import Career from "./pages/Career";
 
 export default function App() {
   return (
@@ -53,11 +53,11 @@ export default function App() {
           }
           />
 
- <Route
-          path="/quotes"
+<Route
+          path="/career"
           element={
             <ProtectedRoute>
-              <Quotes />
+              <Career />
             </ProtectedRoute>
           }
           />

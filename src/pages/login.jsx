@@ -27,6 +27,9 @@ export default function Login() {
     getAdmin();
   }, []);
 
+useEffect(() => {
+    document.title = "Login | Admin Panel";
+  }, []);
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");

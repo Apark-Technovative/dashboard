@@ -2,7 +2,7 @@ import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import api from "../api/axios";
-import { BsChatQuote } from "react-icons/bs";
+import { PiLadderDuotone } from "react-icons/pi";
 import {
   HiOutlineViewGrid,
   HiOutlineCog,
@@ -16,7 +16,7 @@ const menu = [
   { name: "Services", path: "/services", icon: HiOutlineCog },
   { name: "Faq", path: "/faq", icon:  HiOutlineQuestionMarkCircle },
   { name: "Teams", path: "/team", icon: HiUserGroup },
-  { name: "Quotes", path: "/quotes", icon: BsChatQuote  },
+   { name: "Career", path: "/career", icon: PiLadderDuotone },
 ];
 
 export default function Sidebar() {
@@ -26,7 +26,7 @@ export default function Sidebar() {
 
  const handleLogout = async () => {
   try {
-    await api.post("/logout"); // clears httpOnly cookie
+    await api.post("/logout");
     navigate("/login");
   } catch (error) {
     console.error("Logout failed", error);

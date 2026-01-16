@@ -1,56 +1,58 @@
 import { useState, useEffect} from "react";
 import Sidebar from "../components/SideBar";
-import ServicesTable from "../components/ServicesTable";
-import AddServiceModal from "../components/AddServiceModal";
+import CareerTable from "../components/CareerTable";
+import AddCareerModal from "../components/AddCareerModal";
 import TopSearch from "../components/TopSearch";
 import SearchSort from "../components/SearchSort";
 import api from "../api/axios";
 
-export default function Services() {
- const [services, setServices] = useState([]);
+export default function Career() {
+  const [careers, setCareers] = useState([]);
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("newest");
   const [showModal, setShowModal] = useState(false);
-  const [editService, setEditService] = useState(null);
+  const [editCareer, setEditCareer] = useState(null);;
 
   /* FETCH */
-  const fetchServices = async () => {
-    const res = await api.get("/getServices");
-    setServices(res.data.data);
+ const fetchCareers = async () => {
+    const res = await api.get("/career");
+    setCareers(res.data.data);
   };
 
   useEffect(() => {
-    fetchServices();
+    fetchCareers();
   }, []);
 
-   useEffect(() => {
-    document.title = "Services | Admin Panel";
-  }, []); 
-  
-  /* SAVE (ADD + EDIT) */
+  useEffect(() => {
+    document.title = "Career | Admin Panel";
+  }, []);
+
   const handleSave = async (formData, id) => {
     if (id) {
-      await api.patch(`/services/${id}`, formData);
+      await api.patch(`/career/${id}`, formData);
     } else {
-      await api.post("/services", formData);
+      await api.post("/career", formData);
     }
 
     setShowModal(false);
-    setEditService(null);
-    fetchServices();
+    setEditCareer(null);
+    fetchCareers();
   };
 
   /* DELETE */
   const handleDelete = async (id) => {
-    await api.delete(`/services/${id}`);
-    fetchServices();
+    await api.delete(`/career/${id}`);
+    fetchCareers();
   };
 
   /* EDIT */
   const handleEdit = (item) => {
-    setEditService(item);
+    setEditCareer(item);
     setShowModal(true);
   };
+
+ 
+
 
   return (
     <div className="flex min-h-screen bg-[#FAFBFF]">
@@ -65,7 +67,7 @@ export default function Services() {
         <div className="bg-white rounded-2xl shadow-sm p-4 sm:p-6">
           {/* Header */}
           <SearchSort
-            title="All Services"
+            title="Careers"
             search={search}
             sort={sort}
             onSearch={setSearch}
@@ -75,14 +77,14 @@ export default function Services() {
 
 
           {/* Table */}
-          < div className="overflow-x-auto">
-           <ServicesTable
-           data={services}
-            search={search}
-            sort={sort}
-            onDelete={handleDelete}
-          onEdit={handleEdit}
-          />
+          <div className="overflow-x-auto">
+            <CareerTable
+              data={careers}
+              search={search}
+              sort={sort}
+              onDelete={handleDelete}
+              onEdit={handleEdit}
+            />
           </div>
         </div>
       </main>
@@ -90,11 +92,11 @@ export default function Services() {
       {/* Modal */}
      
       {showModal && (
-        <AddServiceModal
-          initialData={editService}
+        <AddCareerModal
+          initialData={editCareer}
           onClose={() => {
             setShowModal(false);
-            setEditService(null);
+            setEditCareer(null);
           }}
           onSave={handleSave}
         />

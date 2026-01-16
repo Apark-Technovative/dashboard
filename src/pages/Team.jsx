@@ -23,6 +23,10 @@ export default function Team() {
     fetchTeam();
   }, []);
 
+  useEffect(() => {
+    document.title = "Teams | Admin Panel";
+  }, []);
+
   /* SAVE (ADD + EDIT) */
   const handleSave = async (formData, id) => {
   try {

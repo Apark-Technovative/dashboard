@@ -1,4 +1,3 @@
-
 import { useMemo, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -88,16 +87,16 @@ export default function TeamTable({
   };
 
   return (
-    <div className="mt-4">
+    <div className="w-full mt-4">
       {/* TABLE */}
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm table-fixed">
+      <div className="w-full overflow-x-auto">
+        <table className="w-full table-fixed text-sm">
           <thead>
            < tr className="text-gray-400 border-b border-[#EEEEEE]">
               <th className="w-[22%] px-4 py-3 text-left">Team Member Name</th>
               <th className="w-[18%] px-4 py-3 text-left">Position</th>
               <th className="w-[35%] px-4 py-3 text-left">Description</th>
-              <th className="w-[15%] px-4 py-3 text-center">Status</th>
+              <th className="w-[15%] px-4 py-3 text-left">Status</th>
               <th className="w-[10%] px-4 py-3 text-center">Action</th>
     </tr>
           </thead>
@@ -122,7 +121,7 @@ export default function TeamTable({
   {item.description}
 </td>
 
-                <td className="py-4 px-5">
+                <td className="py-4 px-2">
                  <span
   className={`w-18 h-8 flex items-center justify-center rounded-sm 
     text-sm border font-semibold
@@ -136,15 +135,16 @@ export default function TeamTable({
 </span>
 
                 </td>
-              <td className="py-4 px-5"> 
-                <div className="flex gap-4 text-lg">
-                   <HiTrash
+             <td className="px-4 py-4 text-center">
+                  <div className="flex justify-center gap-4 text-lg">
+                    <HiTrash
                       onClick={() => handleDelete(item._id)}
                       className="text-red-500 cursor-pointer hover:scale-110 transition"
                     />
-                    
-                  <HiPencil   onClick={() => onEdit(item) } 
-                  className="text-gray-600 cursor-pointer hover:scale-110 transition" />
+                    <HiPencil
+                      onClick={() => onEdit(item)}
+                      className="text-gray-600 cursor-pointer hover:scale-110 transition"
+                    />
                   </div>
                 </td>
               </tr>
