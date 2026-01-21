@@ -6,7 +6,8 @@ import { useState, useEffect, useRef } from "react";
 import { HiX, HiChevronDown } from "react-icons/hi";
 import { toast } from "react-toastify";
 
-const IMAGE_URL = import.meta.env.VITE_API_IMAGE_URL;
+import CloudImage from "./CloudImage";
+
 
 export default function AddTeamModal({ onClose, onSave, initialData }) {
   const [name, setName] = useState("");
@@ -27,8 +28,8 @@ export default function AddTeamModal({ onClose, onSave, initialData }) {
     setDescription(initialData.description || "");
     setStatus(initialData.status || "active");
 
-    if (initialData.image?.[0]) {
-      setPreview(`${IMAGE_URL}/${initialData.image[0]}`);
+   if (initialData.image?.[0]) {
+      setPreview(initialData.image[0]); 
     }
   }, [initialData]);
 
@@ -207,10 +208,18 @@ export default function AddTeamModal({ onClose, onSave, initialData }) {
               <div className="w-20 h-20 bg-gray-200 rounded-lg flex items-center justify-center">
                 {preview ? (
                   <div className="relative w-full h-full">
-                    <img
-                      src={preview}
-                      className="w-full h-full object-cover rounded-lg"
-                    />
+                    {preview.startsWith("blob:") ? (
+                      <img
+                        src={preview}
+                        className="w-full h-full object-cover rounded-lg"
+                      />
+                    ) : (
+                      <CloudImage
+                        publicId={preview}
+                        className="w-full h-full object-cover rounded-lg"
+                      />
+                    )}
+
                     <button
                       type="button"
                       onClick={handleRemoveImage}

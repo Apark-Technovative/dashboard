@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { toast } from "react-toastify";
+import CloudImage from "./CloudImage";
 
 import {
   HiTrash,
@@ -11,7 +12,7 @@ import {
 
 
 const PAGE_SIZE = 6;
-const IMAGE_URL = import.meta.env.VITE_API_IMAGE_URL;
+// const IMAGE_URL = import.meta.env.VITE_API_IMAGE_URL;
 
 export default function ServicesTable({
   data = [],
@@ -88,15 +89,16 @@ export default function ServicesTable({
   return (
    <div className="w-full mt-4">
       {/* TABLE */}
-      <div className="w-full overflow-x-auto">
+ <div className="w-full overflow-x-auto">
+
         <table className="w-full table-fixed text-sm">
           <thead>
             <tr className="text-gray-400 border-b border-[#EEEEEE]">
-              <th className="w-[22%] px-4 py-3 text-left">Title</th>
-              <th className="w-[18%] px-4 py-3 text-left">Image</th>
-              <th className="w-[35%] px-4 py-3 text-left">Description</th>
-              <th className="w-[15%] px-4 py-3 text-left">Status</th>
-              <th className="w-[10%] px-4 py-3 text-center">Action</th>
+             <th className="lg:w-[22%] px-4 py-3 text-left">Title</th>
+  <th className="lg:w-[18%] px-4 py-3 text-left">Image</th>
+  <th className="lg:w-[35%] px-4 py-3 text-left">Description</th>
+  <th className="lg:w-[15%] px-4 py-3 text-left">Status</th>
+  <th className="lg:w-[10%] px-4 py-3 text-center">Action</th>
             </tr>
           </thead>
 
@@ -112,14 +114,14 @@ export default function ServicesTable({
 
                 <td className="px-4 py-4">
                   {item.image?.[0] && (
-                    <img
-                      src={`${IMAGE_URL}/${item.image[0]}`}
-                      className="w-12 h-12 rounded object-cover"
-                    />
+                   <CloudImage
+      publicId={item.image[0]}
+      className="w-12 h-12 rounded object-cover"
+    />
                   )}
                 </td>
 
-                <td className="py-4 px-5 break-words line-clamp-2">
+                <td className="py-4 px-5 break-words line-clamp-3 sm:line-clamp-2">
                   {item.description}
                 </td>
 
@@ -142,7 +144,7 @@ export default function ServicesTable({
                   <div className="flex justify-center gap-4 text-lg">
                     <HiTrash
                       onClick={() => handleDelete(item._id)}
-                      className="text-red-500 cursor-pointer hover:scale-110 transition"
+                      className="text-red-500  cursor-pointer hover:scale-110 transition"
                     />
                     <HiPencil
                       onClick={() => onEdit(item)}

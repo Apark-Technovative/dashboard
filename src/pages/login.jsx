@@ -71,7 +71,7 @@ useEffect(() => {
             <button
               type="button"
               onClick={() => setShowPassword((p) => !p)}
-              className="flex items-center gap-1 text-sm text-gray-500"
+              className="flex items-center gap-1 cursor-pointer text-sm text-gray-500"
             >
               {showPassword ? (
                 <>

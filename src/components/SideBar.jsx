@@ -1,94 +1,150 @@
 import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import ChangePasswordPopup from "./ChangePasswordPopup";
 import api from "../api/axios";
 import { PiLadderDuotone } from "react-icons/pi";
+import { GoPeople } from "react-icons/go";
+import { RiUserSettingsLine } from "react-icons/ri";
+
 import {
   HiOutlineViewGrid,
   HiOutlineCog,
- HiOutlineQuestionMarkCircle,
-  HiUserGroup,
+  HiOutlineQuestionMarkCircle,
   HiChevronRight,
   HiChevronDown,
+  HiMenuAlt2,
+  HiX,
 } from "react-icons/hi";
+
 const menu = [
   { name: "Dashboard", path: "/", icon: HiOutlineViewGrid },
   { name: "Services", path: "/services", icon: HiOutlineCog },
-  { name: "Faq", path: "/faq", icon:  HiOutlineQuestionMarkCircle },
-  { name: "Teams", path: "/team", icon: HiUserGroup },
-   { name: "Career", path: "/career", icon: PiLadderDuotone },
+  { name: "Faq", path: "/faq", icon: HiOutlineQuestionMarkCircle },
+  { name: "Teams", path: "/team", icon: GoPeople },
+  { name: "Career", path: "/career", icon: PiLadderDuotone },
+  { name: "Settings", path: "/setting", icon:  RiUserSettingsLine  },
 ];
 
 export default function Sidebar() {
-  const [open, setOpen] = useState(false);
-  const dispatch = useDispatch();
+  const [open, setOpen] = useState(false); 
+  const [openSidebar, setOpenSidebar] = useState(false); 
+  const [showChangePassword, setShowChangePassword] = useState(false);
   const navigate = useNavigate();
 
- const handleLogout = async () => {
-  try {
-    await api.post("/logout");
-    navigate("/login");
-  } catch (error) {
-    console.error("Logout failed", error);
-  }
-};
+  const handleLogout = async () => {
+    try {
+      await api.post("/logout");
+      navigate("/login");
+    } catch (error) {
+      console.error("Logout failed", error);
+    }
+  };
 
   return (
-    // <aside className="w-64 bg-white border-r px-6 py-8 flex flex-col">
-    <aside className="fixed left-0 top-0 h-screen w-64 bg-white px-6 py-8 flex flex-col">
-      <h1 className="text-2xl font-bold mb-12">Dashboard</h1>
+    <>
+   
+      <button
+        onClick={() => setOpenSidebar(true)}
+        className="fixed top-4 left-4 z-50 p-2 bg-white rounded-lg shadow cursor-pointer lg:hidden"
+      >
+        <HiMenuAlt2 size={22} />
+      </button>
 
-      <nav className="space-y-2">
-        {menu.map(({ name, path, icon: Icon }) => (
-          <NavLink
-            key={name}
-            to={path}
-            className={({ isActive }) =>
-              `flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium
-              ${isActive ? "bg-[#5932EA] text-white" : "text-gray-500"}`
-            }
-          >
-            <Icon size={18} />
-            {name}
-            <HiChevronRight className="ml-auto" />
-          </NavLink>
-        ))}
-      </nav>
-
-      {/* USER DROPDOWN */}
-      <div className="mt-auto pt-6 relative">
+      {openSidebar && (
         <div
-          onClick={() => setOpen(!open)}
-          className="flex items-center justify-between cursor-pointer"
+          onClick={() => setOpenSidebar(false)}
+          className="fixed inset-0 bg-black/40 z-40 lg:hidden"
+        />
+      )}
+
+      <aside
+        className={`
+          fixed left-0 top-0 h-screen w-64 bg-white px-6 py-8 flex flex-col
+          transition-transform duration-300 z-50 
+          ${openSidebar ? "translate-x-0" : "-translate-x-full"}
+          lg:translate-x-0
+        `}
+      >
+     
+        <button
+          onClick={() => setOpenSidebar(false)}
+          className="absolute top-4 right-4 cursor-pointer lg:hidden"
         >
-          <div className="flex items-center gap-3">
-            <img
-              src="https://images.unsplash.com/photo-1766469284258-11bf4223e2af?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwyN3x8fGVufDB8fHx8fA%3D%3D"
-              className="w-10 h-10 rounded-full"
-            />
-            <div>
-              {/* <p className="text-sm font-semibold">Admin Name</p> */}
+          <HiX size={20} />
+        </button>
+
+        <h1 className="text-2xl font-bold mb-12">Dashboard</h1>
+
+        <nav className="space-y-2">
+          {menu.map(({ name, path, icon: Icon }) => (
+            <NavLink
+              key={name}
+              to={path}
+              onClick={() => setOpenSidebar(false)}
+              className={({ isActive }) =>
+                `flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium
+                ${
+                  isActive
+                    ? "bg-[#5932EA] text-white"
+                    : "text-gray-500 hover:bg-gray-100"
+                }`
+              }
+            >
+              <Icon size={18} />
+              {name}
+              <HiChevronRight className="ml-auto" />
+            </NavLink>
+          ))}
+        </nav>
+        <div className="mt-auto pt-6 relative">
+          <div
+            onClick={() => setOpen(!open)}
+            className="flex items-center justify-between cursor-pointer"
+          >
+            <div className="flex items-center gap-3">
+              <img
+                src="https://images.unsplash.com/photo-1766469284258-11bf4223e2af?w=600"
+                className="w-10 h-10 rounded-full"
+                alt="Admin"
+              />
               <p className="text-xs text-gray-500">Admin</p>
             </div>
+
+            <HiChevronDown
+              className={`transition ${open ? "rotate-180" : ""}`}
+            />
           </div>
 
-          <HiChevronDown
-            className={`transition ${open ? "rotate-180" : ""}`}
-          />
-        </div>
-
-        {open && (
-          <button
-            onClick={handleLogout}
-            className="absolute bottom-14 left-0 w-full 
-                       flex  gap-2 pl-11 py-2
-                       text-red-700 rounded-lg cursor-pointer hover:bg-gray-100"
-          >
+          {open && (
+            <div className="absolute bottom-12 left-0 w-full space-y-1">
+               <button
+              onClick={handleLogout}
+              className="w-full flex gap-2 pl-11 py-2 cursor-pointer text-sm
+                 text-red-700 rounded-lg hover:bg-gray-100"
+            >
+              Logout
+            </button>
+              <button
+      onClick={() => setShowChangePassword(true)}
+      className="absolute bottom-10 left-0 w-full 
+                         flex gap-2 pl-11 py-2 cursor-pointer text-sm
+                         text-grey-700 rounded-lg hover:bg-gray-100"
+    >
+      Change Password
+    </button>  
+           
             
-            Logout
-          </button>
-        )}
-      </div>
-    </aside>
+
+    </div>        )}
+        </div>
+      </aside>
+      
+      {showChangePassword && (
+  <ChangePasswordPopup
+    onClose={() => setShowChangePassword(false)}
+  />
+)}
+
+    </>
   );
 }

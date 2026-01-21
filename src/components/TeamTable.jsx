@@ -8,10 +8,10 @@ import {
   HiChevronRight,
 } from "react-icons/hi";
 
-
+import CloudImage from "./CloudImage";
 
 const PAGE_SIZE = 6;
-const IMAGE_URL = import.meta.env.VITE_API_IMAGE_URL;
+
 
 export default function TeamTable({
   data = [],
@@ -93,11 +93,11 @@ export default function TeamTable({
         <table className="w-full table-fixed text-sm">
           <thead>
            < tr className="text-gray-400 border-b border-[#EEEEEE]">
-              <th className="w-[22%] px-4 py-3 text-left">Team Member Name</th>
-              <th className="w-[18%] px-4 py-3 text-left">Position</th>
-              <th className="w-[35%] px-4 py-3 text-left">Description</th>
-              <th className="w-[15%] px-4 py-3 text-left">Status</th>
-              <th className="w-[10%] px-4 py-3 text-center">Action</th>
+              <th className="lg:w-[22%] px-4 py-3 text-left">Team Member Name</th>
+              <th className="lg:w-[18%] px-4 py-3 text-left">Position</th>
+              <th className="lg:w-[35%] px-4 py-3 text-left">Description</th>
+              <th className="lg:w-[15%] px-4 py-3 text-left">Status</th>
+              <th className="lg:w-[10%] px-4 py-3 text-center">Action</th>
     </tr>
           </thead>
           
@@ -117,7 +117,7 @@ export default function TeamTable({
   {item.position}
 </td>
 
-<td className="py-4 px-5 max-w-[280px] line-clamp-2 overflow-hidden">
+<td className="py-4 px-5 break-words line-clamp-3 sm:line-clamp-2">
   {item.description}
 </td>
 

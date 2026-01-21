@@ -93,9 +93,9 @@ export default function FaqTable({
     <table className="w-full table-fixed text-sm">
       <thead>
         <tr className="text-gray-400 border-b border-[#EEEEEE]">
-          <th className="w-[40%] px-4 py-3 text-left">Question</th>
-          <th className="w-[40%] px-4 py-3 text-left">Answer</th>
-          <th className="w-[9%] px-4 py-3 text-center">Action</th>
+          <th className="lg:w-[40%] px-4 py-3 text-left">Question</th>
+          <th className="lg:w-[40%] px-4 py-3 text-left">Answer</th>
+          <th className="lg:w-[9%] px-4 py-3 text-center">Action</th>
         </tr>
       </thead>
 
@@ -109,7 +109,7 @@ export default function FaqTable({
               {item.question}
             </td>
 
-            <td className="py-4 px-5 break-words line-clamp-2">
+           <td className="py-4 px-5 break-words line-clamp-3 sm:line-clamp-2">
               {item.answer}
             </td>
 

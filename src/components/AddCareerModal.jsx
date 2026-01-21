@@ -148,14 +148,14 @@ export default function AddCareerModal({ onClose, onSave, initialData }) {
            {/* Description */}
            <div>
               <label className="block text-sm text-[#666666] mb-1">
-                Deadline
+              Description
               </label>
           <textarea
             rows={4}
             placeholder="Job Description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="border rounded-lg px-4 py-2 w-full resize-none"
+            className="border border-[#66666659]/75 rounded-lg px-4 py-2 w-full resize-none"
           />
           </div>
 

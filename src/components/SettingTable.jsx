@@ -12,74 +12,28 @@ import {
 
 const PAGE_SIZE = 6;
 
-export default function CareerTable({
+export default function SettingTable({
   data = [],
   search = "",
-  sort = "newest",
   onDelete,
   onEdit,
 }) {
   const [page, setPage] = useState(1);
 
   /* FILTER + SORT (SAFE) */
-  const filteredData = useMemo(() => {
+ const filteredData = useMemo(() => {
     const q = search.toLowerCase();
-
-    let rows = data.filter(
-      (item) =>
-        item.title.toLowerCase().includes(q) ||
-        item.position.toLowerCase().includes(q) 
+    return data.filter(
+      (a) =>
+        a.name.toLowerCase().includes(q) ||
+        a.email.toLowerCase().includes(q)
     );
-
-    if (sort === "title") {
-      rows.sort((a, b) => a.title.localeCompare(b.title));
-    }
-
-    if (sort === "oldest") rows.reverse();
-
-    return rows;
-  }, [data, search, sort]);
+  }, [data, search]);
 
   /* PAGINATION */
   const totalPages = Math.ceil(filteredData.length / PAGE_SIZE);
   const start = (page - 1) * PAGE_SIZE;
   const paginatedData = filteredData.slice(start, start + PAGE_SIZE);
-
-  const handleDelete = (id) => {
-  toast(
-    ({ closeToast }) => (
-      <div>
-        <p className="text-sm font-medium mb-2">
-          Are you sure you want to delete this career?
-        </p>
-
-        <div className="flex gap-2 justify-end">
-          <button
-            onClick={() => {
-              onDelete(id);
-             toast.success("Career deleted");
-              closeToast();
-            }}
-            className="px-3 py-1 text-sm bg-red-600 text-white rounded cursor-pointer"
-          >
-            Delete
-          </button>
-
-          <button
-            onClick={closeToast}
-            className="px-3 py-1 text-sm bg-gray-300 rounded cursor-pointer"
-          >
-            Cancel
-          </button>
-        </div>
-      </div>
-    ),
-    {
-      autoClose: false,
-      closeOnClick: false,
-    }
-  );
-};
 
 
   return (
@@ -89,16 +43,12 @@ export default function CareerTable({
         <table className="w-full table-fixed text-sm">
          <thead>
   <tr className="text-gray-400 border-b border-[#EEEEEE]">
-    <th className="lg:w-[18%] px-4 py-3 text-left">Title</th>
-    <th className="lg:w-[14%] px-4 py-3 text-left">Position</th>
-    <th className="lg:w-[16%] px-4 py-3 text-left">Experience</th>
-    <th className="lg:w-[26%] px-4 py-3 text-left">Description</th>
-    <th className="lg:w-[16%] px-4 py-3 text-left">Deadline</th>
-    <th className="lg:w-[10%] px-4 py-3 text-center">Action</th>
+    <th className="lg:w-[30%] px-4 py-3 text-left">User Name</th>
+    <th className="lg:w-[30%] px-4 py-3 text-left">Email</th>
+    <th className="lg:w-[20%] px-4 py-3 text-left">Role</th>
+    <th className="lg:w-[9%] px-4 py-3 text-center">Action</th>
   </tr>
 </thead>
-
-
           <tbody>
             {paginatedData.map((item, i) => (
              <tr key={i}
@@ -106,31 +56,19 @@ export default function CareerTable({
                 className="border-b border-[#EEEEEE] last:border-none"
               >
                 <td className="py-4 px-5 font-medium break-words">
-                  {item.title}
+                  {item.name}
                 </td>
 
                 <td className="py-4 px-5">
-                  {item.position}
+                  {item.email}
                 </td>
 
                 <td className="px-5 py-4 break-words ">
-                 {item.experienceRequired}
-                </td>
-
-                <td className="py-4 px-5 break-words line-clamp-3 sm:line-clamp-2">
-                 {item.description}
-                </td>
-
-                <td className="py-4 px-5">
-                  {item.deadline}
+                 {item.role}
                 </td>
 
                 <td className="py-4 px-4 text-center">
                   <div className="flex justify-center gap-4 text-lg">
-                    <HiTrash
-                      onClick={() => handleDelete(item._id)}
-                      className="text-red-500 cursor-pointer hover:scale-110 transition"
-                    />
                     <HiPencil
                       onClick={() => onEdit(item)}
                       className="text-gray-600 cursor-pointer hover:scale-110 transition"

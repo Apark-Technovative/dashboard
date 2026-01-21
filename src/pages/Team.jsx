@@ -60,8 +60,12 @@ export default function Team() {
   return (
     <div className="flex min-h-screen bg-[#FAFBFF]">
       <Sidebar />
+<main className="
+  flex-1 h-screen overflow-y-auto
+  p-4 sm:p-6 lg:p-8
+  lg:ml-64
+">
 
-      <main className="ml-64 flex-1 p-8 overflow-y-auto  sm:p-12">
         <TopSearch onSearch={setSearch} />
 
         <div className="bg-white rounded-2xl shadow-sm p-6">

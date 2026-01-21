@@ -11,7 +11,7 @@ export default function Dashboard() {
 
       <main className="ml-64 flex-1 p-8">
       
-<h1 > Welcome to Dashboard </h1>  
+<h1 className="text-xl font-bold" > Welcome to Dashboard </h1>  
     </main>
     </div>
   );

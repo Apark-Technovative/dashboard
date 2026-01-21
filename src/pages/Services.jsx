@@ -56,7 +56,12 @@ export default function Services() {
     <div className="flex min-h-screen bg-[#FAFBFF]">
       <Sidebar />
 
-      <main className=" ml-64 flex-1 p-8 h-screen overflow-y-auto sm:p-12 ">
+      <main className="
+  flex-1 h-screen overflow-y-auto
+  p-4 sm:p-6 lg:p-8
+  lg:ml-64
+">
+
         {/* Top Search */}
         <TopSearch onSearch={setSearch} />
 
