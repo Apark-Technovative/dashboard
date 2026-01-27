@@ -4,15 +4,14 @@ import { toast } from "react-toastify";
 import { HiEye, HiEyeOff } from "react-icons/hi"
 
 export default function ChangePasswordModal({ admin, onClose, onSave }) {
-  const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-   const [showNewPassword, setShowNewPassword] = useState(false);
-const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const handleSubmit = () => {
-    if (!currentPassword || !newPassword || !confirmPassword) {
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const handleSubmit = async () => {
+    if (!newPassword || !confirmPassword) {
       return toast.error("All fields are required");
     }
 
@@ -20,13 +19,19 @@ const [showConfirmPassword, setShowConfirmPassword] = useState(false);
       return toast.error("Passwords do not match");
     }
 
-    onSave(admin._id, {
-      password: currentPassword,       
-      newPassword,
-      confirmPassword,
-    });
+    try {
+      await onSave(admin._id, {
+        newPassword,
+        confirmPassword,
+      });
 
-    toast.success("Password updated successfully");
+   
+      onClose();
+    } catch (error) {
+      toast.error(
+        error?.response?.data?.message || "Failed to update password"
+      );
+    }
   };
 
   return (
@@ -42,36 +47,7 @@ const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
         <h2 className="text-lg font-semibold mb-4">Change Password</h2>
         <div className="space-y-6">
-            <div>
-                 <div className="flex justify-between items-center">
-            <label className="block text-sm text-[#666666] mb-1">
-            Current Password
-          </label>
-             <button
-                                  type="button"
-                                  onClick={() => setShowPassword((p) => !p)}
-                                  className="flex items-center gap-1 cursor-pointer text-sm text-gray-500"
-                                >
-                                  {showPassword ? (
-                                    <>
-                                      <HiEyeOff size={16} />
-                                      Hide
-                                    </>
-                                  ) : (
-                                    <>
-                                      <HiEye size={16} />
-                                      Show
-                                    </>
-                                  )}
-                                </button>
-          </div>
-          <input
-                          type={showPassword ? "text" : "password"}
-            value={currentPassword}
-            onChange={(e) => setCurrentPassword(e.target.value)}
-          className="w-full border  border-[#66666659]/75 rounded-lg px-4 py-2"          />
-          </div>
-
+          
        <div>
          <div className="flex justify-between items-center">
             <label className="block text-sm text-[#666666] mb-1">

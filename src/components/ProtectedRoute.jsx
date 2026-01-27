@@ -1,6 +1,5 @@
 import { useEffect } from "react";
-import { useSelector } from "react-redux";
-import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, Outlet } from "react-router-dom";
 import api from "../api/axios";
 import Sidebar from "./SideBar";
 
@@ -29,7 +28,7 @@ export default function ProtectedRoute({ children }) {
   return (
     <div className="flex min-h-screen bg-[#FAFBFF]">
       <Sidebar />
-      {children}
+     <Outlet />
     </div>
   );
 }

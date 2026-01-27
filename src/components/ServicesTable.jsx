@@ -22,6 +22,11 @@ export default function ServicesTable({
   onEdit,
 }) {
   const [page, setPage] = useState(1);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+const [selectedId, setSelectedId] = useState(null);
+const [deleting, setDeleting] = useState(false);
+
+
 
   /* FILTER + SORT (SAFE) */
   const filteredData = useMemo(() => {
@@ -49,42 +54,20 @@ export default function ServicesTable({
   const start = (page - 1) * PAGE_SIZE;
   const paginatedData = filteredData.slice(start, start + PAGE_SIZE);
 
-  const handleDelete = (id) => {
-  toast(
-    ({ closeToast }) => (
-      <div>
-        <p className="text-sm font-medium mb-2">
-          Are you sure you want to delete this service?
-        </p>
 
-        <div className="flex gap-2 justify-end">
-          <button
-            onClick={() => {
-              onDelete(id);
-              toast.success("Service deleted");
-              closeToast();
-            }}
-            className="px-3 py-1 text-sm bg-red-600 text-white rounded cursor-pointer"
-          >
-            Delete
-          </button>
-
-          <button
-            onClick={closeToast}
-            className="px-3 py-1 text-sm bg-gray-300 rounded cursor-pointer"
-          >
-            Cancel
-          </button>
-        </div>
-      </div>
-    ),
-    {
-      autoClose: false,
-      closeOnClick: false,
-    }
-  );
+const confirmDelete = async () => {
+  try {
+    setDeleting(true);
+    await onDelete(selectedId);
+    toast.success("Service deleted successfully");
+  } catch {
+    toast.error("Failed to delete service");
+  } finally {
+    setDeleting(false);
+    setShowDeleteModal(false);
+    setSelectedId(null);
+  }
 };
-
 
   return (
    <div className="w-full mt-4">
@@ -143,7 +126,10 @@ export default function ServicesTable({
                 <td className="px-4 py-4 text-center">
                   <div className="flex justify-center gap-4 text-lg">
                     <HiTrash
-                      onClick={() => handleDelete(item._id)}
+                      onClick={() => {
+    setSelectedId(item._id);
+    setShowDeleteModal(true);
+  }}
                       className="text-red-500  cursor-pointer hover:scale-110 transition"
                     />
                     <HiPencil
@@ -211,6 +197,43 @@ export default function ServicesTable({
           </button>
         </div>
       </div>
+      {showDeleteModal && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+    <div className="bg-white w-[360px] rounded-lg shadow-lg p-6">
+      <h2 className="text-lg font-semibold text-gray-800 mb-2">
+        Delete Service
+      </h2>
+
+      <p className="text-sm text-gray-500 mb-6">
+        Are you sure you want to delete this service? This action cannot be undone.
+      </p>
+
+      <div className="flex justify-end gap-3">
+        <button
+          onClick={() => {
+            setShowDeleteModal(false);
+            setSelectedId(null);
+          }}
+          className="px-4 py-2 text-sm bg-gray-200 rounded hover:bg-gray-300 cursor-pointer"
+        >
+          Cancel
+        </button>
+
+       <button
+  disabled={deleting}
+  onClick={confirmDelete}
+  className="px-4 py-2 text-sm bg-red-600 text-white rounded 
+             hover:bg-red-700 disabled:opacity-50 cursor-pointer"
+>
+  {deleting ? "Deleting..." : "Delete"}
+</button>
+
+
+      </div>
+    </div>
+  </div>
+)}
+
     </div>
   );
 }

@@ -8,6 +8,7 @@ export default function AddCareerModal({ onClose, onSave, initialData }) {
   const [experienceRequired, setExperienceRequired] = useState("");
    const [description, setDescription] = useState("");
   const [deadline, setDeadline] = useState("");
+    const [loading, setLoading] = useState(false);
 
   /* Populate edit data */
   useEffect(() => {
@@ -20,63 +21,80 @@ export default function AddCareerModal({ onClose, onSave, initialData }) {
     setDeadline(initialData.deadline || "");
   }, [initialData]);
 
-   const handleSubmit = () => {
-    if (!title.trim()) return toast.error("Title is required");
-    if (!position.trim()) return toast.error("Position is required");
-    if (!experienceRequired.trim())
-      return toast.error("Experience is required");
-     if (!description.trim())
-      return toast.error("Description is required");
-    if (!deadline.trim()) return toast.error("Deadline is required");
+     const handleSubmit = async () => {
+    try {
+      if (!title.trim()) return toast.error("Title is required");
+      if (!position.trim()) return toast.error("Position is required");
+      if (!experienceRequired.trim())
+        return toast.error("Experience is required");
+      if (!description.trim())
+        return toast.error("Description is required");
+      if (!deadline.trim()) return toast.error("Deadline is required");
 
-    const payload = {
-      title,
-      position,
-      experienceRequired,
-      description,
-      deadline,
-    };
+      const payload = {
+        title,
+        position,
+        experienceRequired,
+        description,
+        deadline,
+      };
 
-    if (!initialData) {
-      onSave(payload);
-      toast.success("Career added successfully");
-      return;
-    }
-
-  
-    toast(
-      ({ closeToast }) => (
-        <div>
-          <p className="text-sm font-medium mb-2">
-             Are you sure you want to update this career?
-          </p>
-
-          <div className="flex gap-2 justify-end">
-            <button
-              onClick={() => {
-               onSave(payload, initialData._id);
-                toast.success("Career updated successfully");
-                closeToast();
-              }}
-              className="px-3 py-1 text-sm bg-[#5932EA] text-white rounded cursor-pointer"
-            >
-              Yes
-            </button>
-
-            <button
-              onClick={closeToast}
-              className="px-3 py-1 text-sm bg-gray-300 rounded cursor-pointer"
-            >
-              Cancel
-            </button>
-          </div>
-        </div>
-      ),
-      {
-        autoClose: false,
-        closeOnClick: false,
+      /* ADD */
+      if (!initialData) {
+         setLoading(true);
+        await onSave(payload);
+        toast.success("Career added successfully");
+        return;
       }
-    );
+
+      /* EDIT CONFIRMATION */
+      toast(
+        ({ closeToast }) => (
+          <div>
+            <p className="text-sm font-medium mb-2">
+              Are you sure you want to update this career?
+            </p>
+
+            <div className="flex gap-2 justify-end">
+              <button
+                onClick={async () => {
+                  try {
+                     setLoading(true);
+                    await onSave(payload, initialData._id);
+                    toast.success("Career updated successfully");
+                  } catch (error) {
+                    toast.error("Failed to update career");
+                    console.error(error);
+                  } finally {
+                     setLoading(false);
+                    closeToast();
+                  }
+                }}
+                className="px-3 py-1 text-sm bg-[#5932EA] text-white rounded cursor-pointer"
+              >
+                Yes
+              </button>
+
+              <button
+                onClick={closeToast}
+                className="px-3 py-1 text-sm bg-gray-300 rounded cursor-pointer"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        ),
+        {
+          autoClose: false,
+          closeOnClick: false,
+        }
+      );
+    } catch (error) {
+      console.error("Error submitting career:", error);
+      toast.error("Something went wrong");
+    } finally {
+     
+    }
   };
 
   return (
@@ -161,13 +179,20 @@ export default function AddCareerModal({ onClose, onSave, initialData }) {
 
           {/* Save */}
           <div className="flex justify-end">
-            <button
-              type="button"
-              onClick={handleSubmit}
-              className="bg-[#5932EA] text-white px-5 py-2 rounded-lg cursor-pointer"
-            >
-              Save
-            </button>
+           <button
+  type="button"
+  onClick={handleSubmit}
+  disabled={loading}
+  className={`px-5 py-2 rounded-lg text-white
+    ${
+      loading
+        ? "bg-[#5932EA]/60 cursor-not-allowed"
+        : "bg-[#5932EA] cursor-pointer hover:bg-[#4a28d9]"
+    }`}
+>
+  {loading ? "Saving..." : "Save"}
+</button>
+
           </div>
         </form>
       </div>

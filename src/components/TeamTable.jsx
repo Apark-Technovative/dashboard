@@ -21,6 +21,9 @@ export default function TeamTable({
   onEdit,
 }) {
   const [page, setPage] = useState(1);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+const [selectedId, setSelectedId] = useState(null);
+const [deleting, setDeleting] = useState(false);
 
   /* FILTER + SORT (SAFE) */
   const filteredData = useMemo(() => {
@@ -44,6 +47,20 @@ export default function TeamTable({
 
     return rows;
   }, [data, search, sort]);
+
+  const confirmDelete = async () => {
+  try {
+    setDeleting(true);
+    await onDelete(selectedId);
+    toast.success("Service deleted successfully");
+  } catch {
+    toast.error("Failed to delete service");
+  } finally {
+    setDeleting(false);
+    setShowDeleteModal(false);
+    setSelectedId(null);
+  }
+};
 
   /* PAGINATION */
   const totalPages = Math.ceil(filteredData.length / PAGE_SIZE);
@@ -138,8 +155,11 @@ export default function TeamTable({
              <td className="px-4 py-4 text-center">
                   <div className="flex justify-center gap-4 text-lg">
                     <HiTrash
-                      onClick={() => handleDelete(item._id)}
-                      className="text-red-500 cursor-pointer hover:scale-110 transition"
+                   onClick={() => {
+    setSelectedId(item._id);
+    setShowDeleteModal(true);
+  }}
+                      className="text-red-500  cursor-pointer hover:scale-110 transition"
                     />
                     <HiPencil
                       onClick={() => onEdit(item)}
@@ -206,6 +226,42 @@ export default function TeamTable({
               </button>
             </div>
           </div>
+          {showDeleteModal && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+    <div className="bg-white w-[360px] rounded-lg shadow-lg p-6">
+      <h2 className="text-lg font-semibold text-gray-800 mb-2">
+        Delete Service
+      </h2>
+
+      <p className="text-sm text-gray-500 mb-6">
+        Are you sure you want to delete this service? This action cannot be undone.
+      </p>
+
+      <div className="flex justify-end gap-3">
+        <button
+          onClick={() => {
+            setShowDeleteModal(false);
+            setSelectedId(null);
+          }}
+          className="px-4 py-2 text-sm bg-gray-200 rounded hover:bg-gray-300 cursor-pointer"
+        >
+          Cancel
+        </button>
+
+       <button
+  disabled={deleting}
+  onClick={confirmDelete}
+  className="px-4 py-2 text-sm bg-red-600 text-white rounded 
+             hover:bg-red-700 disabled:opacity-50 cursor-pointer"
+>
+  {deleting ? "Deleting..." : "Delete"}
+</button>
+
+
+      </div>
+    </div>
+  </div>
+)}
         </div>
       );
     }

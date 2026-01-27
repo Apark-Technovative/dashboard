@@ -13,42 +13,47 @@ export default function Team() {
   const [showModal, setShowModal] = useState(false);
   const [editTeam, setEditTeam] = useState(null);
 
-  /* FETCH TEAM */
-  const fetchTeam = async () => {
-    const res = await api.get("/team");
-    setTeam(res.data.data);
+ const fetchTeam = async () => {
+    try {
+      const res = await api.get("/team");
+      setTeam(res.data.data);
+    } catch (error) {
+      console.error("Error fetching team:", error);
+    }
   };
 
   useEffect(() => {
     fetchTeam();
-  }, []);
-
-  useEffect(() => {
-    document.title = "Teams | Admin Panel";
+      document.title = "Teams | Admin Panel";
   }, []);
 
   /* SAVE (ADD + EDIT) */
   const handleSave = async (formData, id) => {
-  try {
-    if (id) {
-      await api.patch(`/team/${id}`, formData);
-    } else {
-      await api.post("/team", formData);
+    try {
+      if (id) {
+        await api.patch(`/team/${id}`, formData);
+      } else {
+        await api.post("/team", formData);
+      }
+    } catch (error) {
+      console.error("Save failed:", error);
+      throw error; 
+    } finally {
+      setShowModal(false);
+      setEditTeam(null);
+      fetchTeam();
     }
-
-    setShowModal(false);
-    setEditTeam(null);
-    fetchTeam();
-  } catch (err) {
-    console.error("SAVE FAILED", err);
-    throw err;
-  }
-};
+  };
 
   /* DELETE */
   const handleDelete = async (id) => {
-    await api.delete(`/team/${id}`);
-    fetchTeam();
+    try {
+      await api.delete(`/team/${id}`);
+    } catch (error) {
+      console.error("Delete failed:", error);
+    } finally {
+      fetchTeam();
+    }
   };
 
   /* EDIT */

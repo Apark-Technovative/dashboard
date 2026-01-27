@@ -25,9 +25,6 @@ export default function Login() {
   }
   useEffect(() => {
     getAdmin();
-  }, []);
-
-useEffect(() => {
     document.title = "Login | Admin Panel";
   }, []);
   const handleLogin = async (e) => {

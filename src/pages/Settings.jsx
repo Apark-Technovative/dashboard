@@ -13,21 +13,33 @@ export default function Settings() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [editAdmin, setEditAdmin] = useState(null);
 
-  const fetchAdmins = async () => {
-    const res = await api.get("/getAdmin");
-    setAdmins([res.data.data]);
-  };
+ const fetchAdmins = async () => {
+  try {
+    const res = await api.get("/getAllAdmin");
+    setAdmins(res.data.data);
+  } catch (error) {
+    toast.error("Failed to fetch admin data");
+    console.error(error);
+  }
+};
+
 
   useEffect(() => {
     fetchAdmins();
     document.title = "Settings | Admin Panel";
   }, []);
 
+  /* ADD ADMIN */
   const handleAdd = async (data) => {
-    await api.post("/register", data);
-    toast.success("Admin created");
-    setShowAddModal(false);
-    fetchAdmins();
+    try {
+      await api.post("/register", data);
+      toast.success("Admin created");
+      setShowAddModal(false);
+      fetchAdmins();
+    } catch (error) {
+      toast.error("Failed to create admin");
+      console.error(error);
+    }
   };
 
   const handleEdit = (admin) => {
@@ -98,14 +110,19 @@ export default function Settings() {
       )}
 
    {editAdmin && (
-        <ChangePasswordModal
+         <ChangePasswordModal
           admin={editAdmin}
           onClose={() => setEditAdmin(null)}
           onSave={async (id, data) => {
-            await api.post(`/changePassword/${id}`, data);
-            toast.success("Password updated");
-            setEditAdmin(null);
-            fetchAdmins();
+            try {
+              await api.post(`/changePassword/${id}`, data);
+              toast.success("Password updated");
+              setEditAdmin(null);
+              fetchAdmins();
+            } catch (error) {
+              toast.error("Failed to update password");
+              console.error(error);
+            }
           }}
         />
       )}

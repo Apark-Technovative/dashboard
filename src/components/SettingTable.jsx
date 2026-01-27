@@ -15,7 +15,6 @@ const PAGE_SIZE = 6;
 export default function SettingTable({
   data = [],
   search = "",
-  onDelete,
   onEdit,
 }) {
   const [page, setPage] = useState(1);

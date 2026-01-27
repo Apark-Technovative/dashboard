@@ -13,17 +13,17 @@ export default function AddServiceModal({ onClose, onSave, initialData }) {
   const [image, setImage] = useState(null);      
   const [preview, setPreview] = useState(null);  
   const [removedImage, setRemovedImage] = useState([]);
+  const [loading, setLoading] = useState(false);
+  
+
 
   const fileInputRef = useRef(null);
 
-  /* Populate edit data */
-  useEffect(() => {
+ useEffect(() => {
     if (!initialData) return;
 
     setTitle(initialData.title || "");
     setDescription(initialData.description || "");
-
-    // normalize tag safely
     setTag(
       typeof initialData.tag === "string"
         ? initialData.tag
@@ -31,76 +31,94 @@ export default function AddServiceModal({ onClose, onSave, initialData }) {
         ? initialData.tag.join(", ")
         : ""
     );
-
     setStatus(initialData.status || "active");
 
     if (initialData.image?.[0]) {
-      setPreview(initialData.image[0]); 
+      setPreview(initialData.image[0]);
     }
   }, [initialData]);
 
   /* Submit */
-  const handleSubmit = () => {
-    if (!String(title).trim()) return alert("Title is required");
-    if (!String(description).trim()) return alert("Description is required");
-    if (!String(tag).trim()) return alert("Tag is required");
+  const handleSubmit = async () => {
+    try {
+      if (!String(title).trim())
+        return toast.error("Title is required");
+      if (!String(description).trim())
+        return toast.error("Description is required");
+      if (!String(tag).trim())
+        return toast.error("Tag is required");
+      if (!preview)
+        return toast.error("Please upload an image");
 
-    if (!preview) return alert("Please upload an image");
+      const formData = new FormData();
+      formData.append("title", title);
+      formData.append("description", description);
+      formData.append("tag", tag);
+      formData.append("status", status);
 
-    const formData = new FormData();
-    formData.append("title", title);
-    formData.append("description", description);
-    formData.append("tag", tag);
-    formData.append("status", status);
+      removedImage.forEach((img) => {
+        formData.append("removedImage[]", img);
+      });
 
-    removedImage.forEach((img) => {
-      formData.append("removedImage[]", img);
-    });
-
-    if (image) {
-      formData.append("image", image);
-    }
- 
-    if (!initialData) {
-      onSave(formData);
-      toast.success("Service added successfully");
-      return;
-    }
-
-  
-    toast(
-      ({ closeToast }) => (
-        <div>
-          <p className="text-sm font-medium mb-2">
-            Are you sure you want to edit this service?
-          </p>
-
-          <div className="flex gap-2 justify-end">
-            <button
-              onClick={() => {
-                onSave(formData, initialData._id);
-                toast.success("Service updated successfully");
-                closeToast();
-              }}
-              className="px-3 py-1 text-sm bg-[#5932EA] text-white rounded cursor-pointer"
-            >
-              Yes
-            </button>
-
-            <button
-              onClick={closeToast}
-              className="px-3 py-1 text-sm bg-gray-300 rounded cursor-pointer"
-            >
-              Cancel
-            </button>
-          </div>
-        </div>
-      ),
-      {
-        autoClose: false,
-        closeOnClick: false,
+      if (image) {
+        formData.append("image", image);
       }
-    );
+
+      /* ADD */
+      if (!initialData) {
+        setLoading(true);
+        await onSave(formData);
+        toast.success("Service added successfully");
+        return;
+      }
+
+      /* EDIT CONFIRMATION */
+      toast(
+        ({ closeToast }) => (
+          <div>
+            <p className="text-sm font-medium mb-2">
+              Are you sure you want to edit this service?
+            </p>
+
+            <div className="flex gap-2 justify-end">
+              <button
+                onClick={async () => {
+                  try {
+                    setLoading(true);
+                    await onSave(formData, initialData._id);
+                    toast.success("Service updated successfully");
+                  } catch (error) {
+                    toast.error("Failed to update service");
+                    console.error(error);
+                  } finally {
+                    setLoading(false);
+                    closeToast();
+                  }
+                }}
+                className="px-3 py-1 text-sm bg-[#5932EA] text-white rounded cursor-pointer"
+              >
+                Yes
+              </button>
+
+              <button
+                onClick={closeToast}
+                className="px-3 py-1 text-sm bg-gray-300 rounded cursor-pointer"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        ),
+        { autoClose: false, closeOnClick: false }
+      );
+    } catch (error) {
+      toast.error("Failed to save service");
+      console.error("Submit service error:", error);
+    } finally {
+      if (!initialData) {
+        setLoading(false);
+      }
+    }
   };
 
   /* Remove image */
@@ -276,13 +294,20 @@ export default function AddServiceModal({ onClose, onSave, initialData }) {
 
           {/* Save */}
           <div className="flex justify-end">
-            <button
-              type="button"
-              onClick={handleSubmit}
-              className="bg-[#5932EA] text-white px-5 py-2 rounded-lg cursor-pointer"
-            >
-              Save
-            </button>
+           <button
+  type="button"
+  onClick={handleSubmit}
+  disabled={loading}
+  className={`px-5 py-2 rounded-lg text-white
+    ${
+      loading
+        ? "bg-[#5932EA]/60 cursor-not-allowed"
+        : "bg-[#5932EA] cursor-pointer hover:bg-[#4a28d9]"
+    }`}
+>
+  {loading ? "Saving..." : "Save"}
+</button>
+
           </div>
         </form>
       </div>

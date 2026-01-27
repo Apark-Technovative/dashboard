@@ -14,44 +14,50 @@ export default function Faq() {
   const [showModal, setShowModal] = useState(false);
   const [editFaq, setEditFaq] = useState(null);
 
-  /* FETCH */
-  const fetchFaqs = async () => {
-  try {
-    const res = await api.get("/faqs");
-    setFaqs(res.data.data);
-  } catch (err) {
-    if (err.response?.status === 401) {
-      console.warn("Not authenticated");
+ const fetchFaqs = async () => {
+    try {
+      const res = await api.get("/faqs");
+      setFaqs(res.data.data);
+    } catch (error) {
+      if (error.response?.status === 401) {
+        console.warn("Not authenticated");
+      } else {
+        console.error("Error fetching FAQs:", error);
+      }
     }
-  }
-};
-
+  };
 
   useEffect(() => {
     fetchFaqs();
-  }, []);
-
-  useEffect(() => {
     document.title = "Faq | Admin Panel";
   }, []);
 
-  /* SAVE (ADD + EDIT) */
   const handleSave = async (payload, id) => {
-    if (id) {
-      await api.patch(`/faqs/${id}`, payload);
-    } else {
-      await api.post("/faqs", payload);
+    try {
+      if (id) {
+        await api.patch(`/faqs/${id}`, payload);
+      } else {
+        await api.post("/faqs", payload);
+      }
+    } catch (error) {
+      console.error("Save FAQ failed:", error);
+      throw error; 
+    } finally {
+      setShowModal(false);
+      setEditFaq(null);
+      fetchFaqs();
     }
-
-    setShowModal(false);
-    setEditFaq(null);
-    fetchFaqs();
   };
 
   /* DELETE */
   const handleDelete = async (id) => {
-    await api.delete(`/faqs/${id}`);
-    fetchFaqs();
+    try {
+      await api.delete(`/faqs/${id}`);
+    } catch (error) {
+      console.error("Delete FAQ failed:", error);
+    } finally {
+      fetchFaqs();
+    }
   };
 
   /* EDIT */
@@ -59,9 +65,6 @@ export default function Faq() {
     setEditFaq(item);
     setShowModal(true);
   };
-
- 
-
 
   return (
     <div className="flex min-h-screen bg-[#FAFBFF]">

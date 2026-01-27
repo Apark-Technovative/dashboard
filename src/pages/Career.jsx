@@ -14,35 +14,48 @@ export default function Career() {
   const [editCareer, setEditCareer] = useState(null);;
 
   /* FETCH */
- const fetchCareers = async () => {
-    const res = await api.get("/career");
-    setCareers(res.data.data);
+   const fetchCareers = async () => {
+    try {
+      const res = await api.get("/career");
+      setCareers(res.data.data);
+    } catch (error) {
+      console.error("Error fetching careers:", error);
+    }
   };
 
   useEffect(() => {
     fetchCareers();
+      document.title = "Career | Admin Panel";
   }, []);
 
-  useEffect(() => {
-    document.title = "Career | Admin Panel";
-  }, []);
 
+
+  /* SAVE (ADD + EDIT) */
   const handleSave = async (formData, id) => {
-    if (id) {
-      await api.patch(`/career/${id}`, formData);
-    } else {
-      await api.post("/career", formData);
+    try {
+      if (id) {
+        await api.patch(`/career/${id}`, formData);
+      } else {
+        await api.post("/career", formData);
+      }
+    } catch (error) {
+      console.error("Error saving career:", error);
+    } finally {
+      setShowModal(false);
+      setEditCareer(null);
+      fetchCareers();
     }
-
-    setShowModal(false);
-    setEditCareer(null);
-    fetchCareers();
   };
 
   /* DELETE */
   const handleDelete = async (id) => {
-    await api.delete(`/career/${id}`);
-    fetchCareers();
+    try {
+      await api.delete(`/career/${id}`);
+    } catch (error) {
+      console.error("Error deleting career:", error);
+    } finally {
+      fetchCareers();
+    }
   };
 
   /* EDIT */
@@ -50,7 +63,6 @@ export default function Career() {
     setEditCareer(item);
     setShowModal(true);
   };
-
  
 
 

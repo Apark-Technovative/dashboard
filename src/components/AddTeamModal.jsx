@@ -17,10 +17,11 @@ export default function AddTeamModal({ onClose, onSave, initialData }) {
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
   const [removedImage, setRemovedImage] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const fileInputRef = useRef(null);
 
-  useEffect(() => {
+ useEffect(() => {
     if (!initialData) return;
 
     setName(initialData.name || "");
@@ -28,73 +29,84 @@ export default function AddTeamModal({ onClose, onSave, initialData }) {
     setDescription(initialData.description || "");
     setStatus(initialData.status || "active");
 
-   if (initialData.image?.[0]) {
-      setPreview(initialData.image[0]); 
+    if (initialData.image?.[0]) {
+      setPreview(initialData.image[0]);
     }
   }, [initialData]);
 
-  /* Submit */
+ 
   const handleSubmit = async () => {
-  if (!name.trim()) return alert("Name is required");
-  if (!position.trim()) return alert("Position is required");
-  if (!description.trim()) return alert("Description is required");
-  if (!preview) return alert("Please upload an image");
+    try {
+      if (!name.trim()) return toast.error("Name is required");
+      if (!position.trim()) return toast.error("Position is required");
+      if (!description.trim()) return toast.error("Description is required");
+      if (!preview) return toast.error("Please upload an image");
 
-  const formData = new FormData();
-  formData.append("name", name);
-  formData.append("position", position);
-  formData.append("description", description);
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("position", position);
+      formData.append("description", description);
+      formData.append("status", status);
 
-  removedImage.forEach((img) => {
-    formData.append("removedImage[]", img);
-  });
+      removedImage.forEach((img) => {
+        formData.append("removedImage[]", img);
+      });
 
-  if (image) {
-    formData.append("image", image);
-  }
+      if (image) {
+        formData.append("image", image);
+      }
 
-  try {
-    if (!initialData) {
-      await onSave(formData); 
-      toast.success("Team member added successfully");
-      return;
-    }
+      if (!initialData) {
+         setLoading(true);
+        await onSave(formData);
+        toast.success("Team member added successfully");
+        return;
+      }
 
-    toast(
-      ({ closeToast }) => (
-        <div>
-          <p className="text-sm font-medium mb-2">
-             Are you sure you want to update the Team Member?
-          </p>
+      toast(
+        ({ closeToast }) => (
+          <div>
+            <p className="text-sm font-medium mb-2">
+              Are you sure you want to update the Team Member?
+            </p>
 
-          <div className="flex gap-2 justify-end">
-            <button
-              onClick={async () => {
-                await onSave(formData, initialData._id);
-                toast.success("Team Member updated successfully");
-                closeToast();
-              }}
-              className="px-3 py-1 text-sm bg-[#5932EA] text-white rounded cursor-pointer"
-            >
-              Yes
-            </button>
+            <div className="flex gap-2 justify-end">
+              <button
+                onClick={async () => {
+                  try {
+                     setLoading(true);
+                    await onSave(formData, initialData._id);
+                    toast.success("Team Member updated successfully");
+                  } catch (error) {
+                    toast.error("Failed to update team member");
+                    console.error(error);
+                  } finally {
+                     setLoading(false);
+                    closeToast();
+                  }
+                }}
+                className="px-3 py-1 text-sm bg-[#5932EA] text-white rounded cursor-pointer"
+              >
+                Yes
+              </button>
 
-            <button
-              onClick={closeToast}
-              className="px-3 py-1 text-sm bg-gray-300 rounded cursor-pointer"
-            >
-              Cancel
-            </button>
+              <button
+                onClick={closeToast}
+                className="px-3 py-1 text-sm bg-gray-300 rounded cursor-pointer"
+              >
+                Cancel
+              </button>
+            </div>
           </div>
-        </div>
-      ),
-      { autoClose: false, closeOnClick: false }
-    );
-  } catch (err) {
-    toast.error("Failed to save team member");
-    console.error(err);
-  }
-};
+        ),
+        { autoClose: false, closeOnClick: false }
+      );
+    } catch (error) {
+      toast.error("Failed to save team member");
+      console.error("Submit error:", error);
+    } finally {
+    }
+  };
 
   /* Remove image */
   const handleRemoveImage = () => {
@@ -129,6 +141,7 @@ export default function AddTeamModal({ onClose, onSave, initialData }) {
     setImage(file);
     setPreview(URL.createObjectURL(file));
   };
+
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
@@ -266,19 +279,28 @@ export default function AddTeamModal({ onClose, onSave, initialData }) {
 
           {/* Save */}
           <div className="flex justify-end">
-            <button
-              type="button"
-              onClick={handleSubmit}
-              className="bg-[#5932EA] text-white px-5 py-2 rounded-lg cursor-pointer"
-            >
-              Save
-            </button>
+          <button
+  type="button"
+  onClick={handleSubmit}
+  disabled={loading}
+  className={`px-5 py-2 rounded-lg text-white
+    ${
+      loading
+        ? "bg-[#5932EA]/60 cursor-not-allowed"
+        : "bg-[#5932EA] cursor-pointer hover:bg-[#4a28d9]"
+    }`}
+>
+  {loading ? "Saving..." : "Save"}
+</button>
+
+
           </div>
         </form>
       </div>
     </div>
   );
 }
+
 
 
 

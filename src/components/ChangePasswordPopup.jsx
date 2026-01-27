@@ -1,16 +1,20 @@
+
 import { useState } from "react";
 import { HiX, HiEye, HiEyeOff } from "react-icons/hi";
 import { toast } from "react-toastify";
 import api from "../api/axios";
 
 export default function ChangePasswordPopup({ onClose }) {
+  const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const handleSubmit = async () => {
-    if (!newPassword || !confirmPassword) {
+const handleSubmit = async () => {
+    if (!currentPassword || !newPassword || !confirmPassword) {
       return toast.error("All fields are required");
     }
 
@@ -18,13 +22,20 @@ export default function ChangePasswordPopup({ onClose }) {
       return toast.error("Passwords do not match");
     }
 
-    await api.post("/changeMyPassword", {
-      newPassword,
-      confirmPassword,
-    });
+    try {
+      await api.post("/changeMyPassword", {
+        password: currentPassword,
+        newPassword,
+        confirmPassword,
+      });
 
-    toast.success("Password changed successfully");
-    onClose();
+      toast.success("Password changed successfully");
+      onClose();
+    } catch (error) {
+      toast.error(
+        error?.response?.data?.message || "Failed to change password"
+      );
+    }
   };
 
   return (
@@ -38,10 +49,42 @@ export default function ChangePasswordPopup({ onClose }) {
           <HiX size={20} />
         </button>
 
-        <h2 className="text-lg font-semibold mb-4">Change Password</h2>
+        <h2 className="text-lg font-semibold mb-4">
+          Change Password
+        </h2>
 
         <div className="space-y-5">
-          {/* NEW PASSWORD */}
+     
+          <div>
+            <div className="flex justify-between items-center mb-1">
+              <label className="block text-sm text-[#666666]">
+                Current Password
+              </label>
+              <button
+                type="button"
+                onClick={() => setShowCurrentPassword((p) => !p)}
+                className="flex items-center gap-1 text-sm text-gray-500 cursor-pointer"
+              >
+                {showCurrentPassword ? (
+                  <>
+                    <HiEyeOff size={16} /> Hide
+                  </>
+                ) : (
+                  <>
+                    <HiEye size={16} /> Show
+                  </>
+                )}
+              </button>
+            </div>
+            <input
+              type={showCurrentPassword ? "text" : "password"}
+              value={currentPassword}
+              onChange={(e) => setCurrentPassword(e.target.value)}
+              className="w-full border border-[#66666659]/75 rounded-lg px-4 py-2"
+            />
+          </div>
+  
+
           <div>
             <div className="flex justify-between items-center mb-1">
               <label className="block text-sm text-[#666666]">
@@ -50,7 +93,7 @@ export default function ChangePasswordPopup({ onClose }) {
               <button
                 type="button"
                 onClick={() => setShowNewPassword((p) => !p)}
-                className="flex items-center gap-1 cursor-pointer text-sm text-gray-500"
+                className="flex items-center gap-1 text-sm text-gray-500 cursor-pointer"
               >
                 {showNewPassword ? (
                   <>
@@ -98,14 +141,16 @@ export default function ChangePasswordPopup({ onClose }) {
             <input
               type={showConfirmPassword ? "text" : "password"}
               value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
+              onChange={(e) =>
+                setConfirmPassword(e.target.value)
+              }
               className="w-full border border-[#66666659]/75 rounded-lg px-4 py-2"
             />
           </div>
 
           {/* BUTTON */}
           <div className="flex justify-center pt-2">
-            <button
+           <button
               onClick={handleSubmit}
               className="bg-[#5932EA] text-white px-6 py-2 rounded-lg cursor-pointer"
             >

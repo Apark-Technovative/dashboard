@@ -13,45 +13,54 @@ export default function Services() {
   const [showModal, setShowModal] = useState(false);
   const [editService, setEditService] = useState(null);
 
-  /* FETCH */
   const fetchServices = async () => {
-    const res = await api.get("/getServices");
-    setServices(res.data.data);
+    try {
+      const res = await api.get("/getServices");
+      setServices(res.data.data);
+    } catch (error) {
+      console.error("Error fetching services:", error);
+    }
   };
 
   useEffect(() => {
     fetchServices();
-  }, []);
-
-   useEffect(() => {
     document.title = "Services | Admin Panel";
-  }, []); 
-  
-  /* SAVE (ADD + EDIT) */
+  }, []);
   const handleSave = async (formData, id) => {
-    if (id) {
-      await api.patch(`/services/${id}`, formData);
-    } else {
-      await api.post("/services", formData);
+    try {
+      if (id) {
+        await api.patch(`/services/${id}`, formData);
+      } else {
+        await api.post("/services", formData);
+      } 
+    } catch (error) {
+      console.error("Save service failed:", error);
+      throw error; 
+    } finally {
+      setShowModal(false);
+      setEditService(null);
+      fetchServices();
     }
-
-    setShowModal(false);
-    setEditService(null);
-    fetchServices();
   };
 
-  /* DELETE */
-  const handleDelete = async (id) => {
+ const handleDelete = async (id) => {
+  try {
     await api.delete(`/services/${id}`);
+  } catch (error) {
+    console.error("Delete service failed:", error);
+    throw error;
+  } finally {
     fetchServices();
-  };
+  }
+};
+
 
   /* EDIT */
   const handleEdit = (item) => {
     setEditService(item);
     setShowModal(true);
   };
-
+  
   return (
     <div className="flex min-h-screen bg-[#FAFBFF]">
       <Sidebar />

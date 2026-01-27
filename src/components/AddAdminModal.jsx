@@ -11,18 +11,31 @@ const [showPassword, setShowPassword] = useState(false);
 const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+    const [loading, setLoading] = useState(false);
   
+const handleSubmit = async () => {
+  if (loading) return; 
 
-  const handleSubmit = () => {
-    if (!name || !email || !password)
+  try {
+    if (!name || !email || !password || !confirmPassword) {
       return toast.error("All fields required");
+    }
 
-    if (password !== confirmPassword)
+    if (password !== confirmPassword) {
       return toast.error("Passwords do not match");
+    }
 
-    onSave({ name, email, role, password, confirmPassword });
+    setLoading(true); 
+    await onSave({ name, email, role, password, confirmPassword });
     toast.success("Admin created successfully");
-  };
+    onClose();
+  } catch (error) {
+    toast.error("Failed to create admin");
+    console.error(error);
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
@@ -136,12 +149,19 @@ const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
            </div>
 <div className="flex justify-center">
-          <button
-            onClick={handleSubmit}
-            className=" bg-[#5932EA] text-white px-5 py-2 rounded-lg cursor-pointer"
-          >
-           Add User
-          </button>
+           <button
+  type="button"
+  onClick={handleSubmit}
+  disabled={loading}
+  className={`px-5 py-2 rounded-lg text-white
+    ${
+      loading
+        ? "bg-[#5932EA]/60 cursor-not-allowed"
+        : "bg-[#5932EA] cursor-pointer hover:bg-[#4a28d9]"
+    }`}
+>
+  {loading ? "Adding..." : "Add User"}
+</button>
          </div>
         </div>
       </div>
