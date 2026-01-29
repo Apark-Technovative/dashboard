@@ -1,11 +1,10 @@
-
-
-
-
 import { useState, useEffect, useRef } from "react";
 import { HiX, HiChevronDown } from "react-icons/hi";
 import { toast } from "react-toastify";
-
+import { EditorContent, useEditor } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import TiptapToolbar from "./TiptapToolbar";
+import Underline from "@tiptap/extension-underline";
 import CloudImage from "./CloudImage";
 
 
@@ -21,14 +20,28 @@ export default function AddTeamModal({ onClose, onSave, initialData }) {
 
   const fileInputRef = useRef(null);
 
+  const editor = useEditor({
+    extensions: [
+      StarterKit,
+      Underline,
+    ],
+    onUpdate: ({ editor }) => {
+      setDescription(editor.getHTML());
+    },
+  });
+  
+
  useEffect(() => {
+    document.body.style.overflow = "hidden";
     if (!initialData) return;
 
     setName(initialData.name || "");
     setPosition(initialData.position || "");
-    setDescription(initialData.description || "");
+  
     setStatus(initialData.status || "active");
-
+ if (editor && initialData.description) {
+  editor.commands.setContent(initialData.description);
+}
     if (initialData.image?.[0]) {
       setPreview(initialData.image[0]);
     }
@@ -39,16 +52,15 @@ export default function AddTeamModal({ onClose, onSave, initialData }) {
     try {
       if (!name.trim()) return toast.error("Name is required");
       if (!position.trim()) return toast.error("Position is required");
-      if (!description.trim()) return toast.error("Description is required");
-      if (!preview) return toast.error("Please upload an image");
-
+if (!editor || editor.isEmpty)
+  return toast.error("Description is required")
       const formData = new FormData();
       formData.append("name", name);
       formData.append("position", position);
       formData.append("description", description);
       formData.append("status", status);
 
-      removedImage.forEach((img) => {
+    removedImage.forEach((img) => {
         formData.append("removedImage[]", img);
       });
 
@@ -108,7 +120,6 @@ export default function AddTeamModal({ onClose, onSave, initialData }) {
     }
   };
 
-  /* Remove image */
   const handleRemoveImage = () => {
     if (initialData?.image?.[0] && removedImage.length === 0) {
       setRemovedImage([initialData.image[0]]);
@@ -126,7 +137,6 @@ export default function AddTeamModal({ onClose, onSave, initialData }) {
     }
   };
 
-  /* Upload / Replace image */
   const handleImageUpload = (file) => {
     if (!file) return;
 
@@ -144,9 +154,9 @@ export default function AddTeamModal({ onClose, onSave, initialData }) {
 
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-      <div className="bg-white w-[720px] rounded-xl p-8 relative">
-        {/* Close */}
+  <div className="fixed inset-0 z-50 bg-black/40 flex justify-center items-start">
+  <div className="bg-white w-[720px] rounded-xl p-8 relative mt-10 max-h-[90vh] overflow-y-auto">
+        
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 cursor-pointer"
@@ -159,8 +169,7 @@ export default function AddTeamModal({ onClose, onSave, initialData }) {
         </h2>
 
         <form className="space-y-6">
-          {/* Name + Position */}
-          <div className="grid grid-cols-2 gap-6">
+         
             <div>
               <label className="block text-sm mb-1">Name</label>
               <input
@@ -169,27 +178,16 @@ export default function AddTeamModal({ onClose, onSave, initialData }) {
                 onChange={(e) => setName(e.target.value)}
               />
             </div>
-             <div>
+         
+
+          {/* Tag + Status */}
+          <div className="grid grid-cols-2 gap-6">
+            <div>
               <label className="block text-sm mb-1">Position</label>
               <input
                 className="w-full border  border-[#66666659]/75 rounded-lg px-4 py-2"
                 value={position}
                 onChange={(e) => setPosition(e.target.value)}
-              />
-            </div>
-            
-          </div>
-
-          {/* Tag + Status */}
-          <div className="grid grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm text-[#666666] mb-1">
-                Description
-              </label>
-              <input
-                className="w-full border  border-[#66666659]/75 rounded-lg px-4 py-2"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
               />
             </div>
 
@@ -210,12 +208,22 @@ export default function AddTeamModal({ onClose, onSave, initialData }) {
               </div>
             </div>
           </div>
-
-          {/* Image */}
+           <div>
+             <label className="block text-sm text-[#666666] mb-1">
+               Description
+             </label>
+           
+             <TiptapToolbar editor={editor} />
+           
+             <div className="border border-[#66666659]/75 rounded-lg px-4 py-3 min-h-[140px]">
+               <EditorContent editor={editor} spellCheck={false} />
+             </div>
+           </div>
           <div>
             <label className="block text-sm text-[#666666] mb-2">
-              Image
-            </label>
+  Image <span className="text-gray-400">(optional)</span>
+</label>
+
 
             <div className="flex items-center gap-4">
               <div className="w-20 h-20 bg-gray-200 rounded-lg flex items-center justify-center">

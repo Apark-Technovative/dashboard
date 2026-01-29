@@ -1,14 +1,17 @@
 import { useState, useEffect, useRef } from "react";
 import { HiX, HiChevronDown } from "react-icons/hi";
 import { toast } from "react-toastify";
-import CloudImage from "./CloudImage"; 
-
-// const IMAGE_URL = import.meta.env.VITE_API_IMAGE_URL;
+import { EditorContent, useEditor } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import TiptapToolbar from "./TiptapToolbar";
+import Underline from "@tiptap/extension-underline";
+import CloudImage from "./CloudImage";
 
 export default function AddServiceModal({ onClose, onSave, initialData }) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [tag, setTag] = useState("");
+const [tags, setTags] = useState([]);
+const [tagInput, setTagInput] = useState("");
   const [status, setStatus] = useState("active");
   const [image, setImage] = useState(null);      
   const [preview, setPreview] = useState(null);  
@@ -17,43 +20,100 @@ export default function AddServiceModal({ onClose, onSave, initialData }) {
   
 
 
-  const fileInputRef = useRef(null);
+ const fileInputRef = useRef(null);
+
+const editor = useEditor({
+  extensions: [
+    StarterKit,
+    Underline,
+  ],
+  onUpdate: ({ editor }) => {
+    setDescription(editor.getHTML());
+  },
+});
+
+
 
  useEffect(() => {
+  document.body.style.overflow = "hidden";
     if (!initialData) return;
 
     setTitle(initialData.title || "");
-    setDescription(initialData.description || "");
-    setTag(
-      typeof initialData.tag === "string"
-        ? initialData.tag
-        : Array.isArray(initialData.tag)
-        ? initialData.tag.join(", ")
-        : ""
-    );
+    
+setTags(
+  initialData?.tag
+    ? String(
+        Array.isArray(initialData.tag)
+          ? initialData.tag.join(",")
+          : initialData.tag
+      )
+        .split(",")
+        .map(t => t.trim())
+        .filter(Boolean)
+    : []
+);
+
+
     setStatus(initialData.status || "active");
+
+
+    if (editor && initialData.description) {
+  editor.commands.setContent(initialData.description);
+}
 
     if (initialData.image?.[0]) {
       setPreview(initialData.image[0]);
     }
   }, [initialData]);
 
-  /* Submit */
+ const handleTagKeyDown = (e) => {
+  if (e.key === "Enter" || e.key === ",") {
+    e.preventDefault();
+
+    const values = tagInput
+      .split(",")
+      .map(t => t.trim())
+      .filter(Boolean);
+
+    if (!values.length) return;
+
+    setTags(prev => [...new Set([...prev, ...values])]);
+    setTagInput("");
+  }
+};
+const addTagFromInput = () => {
+  if (!tagInput.trim()) return;
+
+  const values = tagInput
+    .split(",")
+    .map(t => t.trim())
+    .filter(Boolean);
+
+  setTags(prev => [...new Set([...prev, ...values])]);
+  setTagInput("");
+};
+
+
+const removeTag = (index) => {
+  setTags(tags.filter((_, i) => i !== index));
+};
+
   const handleSubmit = async () => {
     try {
       if (!String(title).trim())
         return toast.error("Title is required");
-      if (!String(description).trim())
-        return toast.error("Description is required");
-      if (!String(tag).trim())
-        return toast.error("Tag is required");
+  if (!tags.length)
+  return toast.error("At least one tag is required");
+
+       if (!editor || editor.isEmpty)
+  return toast.error("Description is required");
       if (!preview)
         return toast.error("Please upload an image");
 
       const formData = new FormData();
       formData.append("title", title);
       formData.append("description", description);
-      formData.append("tag", tag);
+    formData.append("tag", tags.join(","));
       formData.append("status", status);
 
       removedImage.forEach((img) => {
@@ -154,10 +214,9 @@ export default function AddServiceModal({ onClose, onSave, initialData }) {
     setImage(file);
     setPreview(URL.createObjectURL(file));
   };
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-      <div className="bg-white w-[720px] rounded-xl p-8 relative">
+    <div className="fixed inset-0 z-50 bg-black/40 flex justify-center items-start">
+  <div className="bg-white w-[720px] rounded-xl p-8 relative mt-10 max-h-[90vh] overflow-y-auto">
         {/* Close */}
         <button
           onClick={onClose}
@@ -172,42 +231,56 @@ export default function AddServiceModal({ onClose, onSave, initialData }) {
 
         <form className="space-y-6">
           {/* Title + Description */}
-          <div className="grid grid-cols-2 gap-6">
             <div>
               <label className="block text-sm text-[#666666] mb-1">
                 Title
               </label>
               <input
-                className="w-full border  border-[#66666659]/75 rounded-lg px-4 py-2"
+                className="w-full border border-[#66666659]/75 rounded-lg px-4 py-2"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
               />
             </div>
 
-            <div>
-              <label className="block text-sm text-[#666666] mb-1">
-                Description
-              </label>
-              <input
-                className="w-full border  border-[#66666659]/75 rounded-lg px-4 py-2"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-              />
-            </div>
-          </div>
+            
+        
 
           {/* Tag + Status */}
           <div className="grid grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm text-[#666666] mb-1">
-                Tag
-              </label>
-              <input
-                className="w-full border  border-[#66666659]/75 rounded-lg px-4 py-2"
-                value={tag}
-                onChange={(e) => setTag(e.target.value)}
-              />
-            </div>
+           <div>
+  <label className="block text-sm text-[#666666] mb-1">
+    Tags
+  </label>
+
+  <div className="flex flex-wrap gap-2 border border-[#66666659]/75 rounded-lg px-3 py-2 min-h-[44px]">
+    {tags.map((tag, index) => (
+      <span
+        key={index}
+        className="flex items-center gap-2 bg-[#F1F5FF] text-[#5932EA] px-3 py-1 rounded-full text-sm"
+      >
+        {tag}
+        <button
+          type="button"
+          onClick={() => removeTag(index)}
+          className="text-xs hover:text-red-500 cursor-pointer"
+        >
+          ✕
+        </button>
+      </span>
+    ))}
+
+  <input
+  value={tagInput}
+  onChange={(e) => setTagInput(e.target.value)}
+  onKeyDown={handleTagKeyDown}
+  onBlur={addTagFromInput}   
+  className="flex-1 outline-none text-sm min-w-[120px] px-1"
+/>
+
+
+  </div>
+</div>
+
 
             <div>
               <label className="block text-sm text-[#666666] mb-1">
@@ -226,9 +299,21 @@ export default function AddServiceModal({ onClose, onSave, initialData }) {
               </div>
             </div>
           </div>
+          
+            <div>
+  <label className="block text-sm text-[#666666] mb-1">
+    Description
+  </label>
 
-          {/* Image */}
-          <div>
+  <TiptapToolbar editor={editor} />
+
+  <div className="border border-[#66666659]/75 rounded-lg px-4 py-3 min-h-[140px]">
+    <EditorContent editor={editor} spellCheck={false} />
+  </div>
+</div>
+
+
+<div>
             <label className="block text-sm text-[#666666] mb-2">
               Image
             </label>

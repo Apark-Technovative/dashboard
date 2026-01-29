@@ -1,5 +1,9 @@
 import { useState, useEffect, useRef } from "react";
-import { HiX, HiChevronDown } from "react-icons/hi";
+import { HiX } from "react-icons/hi";
+import { EditorContent, useEditor } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import TiptapToolbar from "./TiptapToolbar";
+import Underline from "@tiptap/extension-underline";
 import { toast } from "react-toastify";
 
 export default function AddCareerModal({ onClose, onSave, initialData }) {
@@ -9,15 +13,31 @@ export default function AddCareerModal({ onClose, onSave, initialData }) {
    const [description, setDescription] = useState("");
   const [deadline, setDeadline] = useState("");
     const [loading, setLoading] = useState(false);
+    
+
+    const editor = useEditor({
+      extensions: [
+        StarterKit,
+        Underline,
+      ],
+      onUpdate: ({ editor }) => {
+        setDescription(editor.getHTML());
+      },
+    });
+    
 
   /* Populate edit data */
   useEffect(() => {
+    document.body.style.overflow = "hidden";
     if (!initialData) return;
 
     setTitle(initialData.title || "");
     setPosition(initialData.position || "");
     setExperienceRequired(initialData.experienceRequired || "");
-     setDescription(initialData.description || "");
+ if (editor && initialData.description) {
+  editor.commands.setContent(initialData.description);
+}
+
     setDeadline(initialData.deadline || "");
   }, [initialData]);
 
@@ -27,8 +47,8 @@ export default function AddCareerModal({ onClose, onSave, initialData }) {
       if (!position.trim()) return toast.error("Position is required");
       if (!experienceRequired.trim())
         return toast.error("Experience is required");
-      if (!description.trim())
-        return toast.error("Description is required");
+      if (!editor || editor.isEmpty)
+  return toast.error("Description is required");
       if (!deadline.trim()) return toast.error("Deadline is required");
 
       const payload = {
@@ -98,8 +118,8 @@ export default function AddCareerModal({ onClose, onSave, initialData }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-      <div className="bg-white w-[720px] rounded-xl p-8 relative">
+    <div className="fixed inset-0 z-50 bg-black/40 flex justify-center items-start">
+  <div className="bg-white w-[720px] rounded-xl p-8 relative mt-10 max-h-[90vh] overflow-y-auto">
         {/* Close */}
         <button
           onClick={onClose}
@@ -156,25 +176,23 @@ export default function AddCareerModal({ onClose, onSave, initialData }) {
                 Deadline
               </label>
               <input
+              type="date"
                 className="w-full border  border-[#66666659]/75 rounded-lg px-4 py-2"
                 value={deadline}
                 onChange={(e) => setDeadline(e.target.value)}
               />
             </div>
           </div>
-
-           {/* Description */}
            <div>
-              <label className="block text-sm text-[#666666] mb-1">
+            <label className="block text-sm text-[#666666] mb-1">
               Description
-              </label>
-          <textarea
-            rows={4}
-            placeholder="Job Description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            className="border border-[#66666659]/75 rounded-lg px-4 py-2 w-full resize-none"
-          />
+            </label>
+          
+            <TiptapToolbar editor={editor} />
+          
+            <div className="border border-[#66666659]/75 rounded-lg px-4 py-3 min-h-[140px]">
+              <EditorContent editor={editor} spellCheck={false} />
+            </div>
           </div>
 
           {/* Save */}
@@ -199,10 +217,3 @@ export default function AddCareerModal({ onClose, onSave, initialData }) {
     </div>
   );
 }
-
-
-
-
-
-
-

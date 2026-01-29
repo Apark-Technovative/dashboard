@@ -120,7 +120,7 @@ export default function Sidebar() {
                <button
               onClick={handleLogout}
               className="w-full flex gap-2 pl-11 py-2 cursor-pointer text-sm
-                 text-red-700 rounded-lg hover:bg-gray-100"
+                 text-red-700 bg-gray-100 hover:bg-gray-200"
             >
               Logout
             </button>
@@ -128,7 +128,7 @@ export default function Sidebar() {
       onClick={() => setShowChangePassword(true)}
       className="absolute bottom-10 left-0 w-full 
                          flex gap-2 pl-11 py-2 cursor-pointer text-sm
-                         text-grey-700 rounded-lg hover:bg-gray-100"
+                         text-grey-700 bg-gray-100 hover:bg-gray-200"
     >
       Change Password
     </button>  

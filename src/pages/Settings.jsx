@@ -10,8 +10,10 @@ import { toast } from "react-toastify";
 export default function Settings() {
   const [admins, setAdmins] = useState([]);
   const [search, setSearch] = useState("");
+  const [currentUserRole, setCurrentUserRole] = useState(null);
   const [showAddModal, setShowAddModal] = useState(false);
   const [editAdmin, setEditAdmin] = useState(null);
+  
 
  const fetchAdmins = async () => {
   try {
@@ -23,9 +25,20 @@ export default function Settings() {
   }
 };
 
+const fetchCurrentAdmin = async () => {
+  try {
+    const res = await api.get("/getAdmin");
+    setCurrentUserRole(res.data?.data?.role);
+  } catch (error) {
+    console.error("Failed to fetch current admin");
+  }
+};
+
+
 
   useEffect(() => {
     fetchAdmins();
+    fetchCurrentAdmin();
     document.title = "Settings | Admin Panel";
   }, []);
 
@@ -106,8 +119,11 @@ export default function Settings() {
         <AddAdminModal
           onClose={() => setShowAddModal(false)}
           onSave={handleAdd}
+          currentUserRole={currentUserRole} 
         />
+
       )}
+
 
    {editAdmin && (
          <ChangePasswordModal

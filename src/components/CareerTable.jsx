@@ -24,21 +24,22 @@ export default function CareerTable({
 const [selectedId, setSelectedId] = useState(null);
 const [deleting, setDeleting] = useState(false);
 
-  /* FILTER + SORT (SAFE) */
-  const filteredData = useMemo(() => {
-    const q = search.toLowerCase();
+const filteredData = useMemo(() => {
+    const safeSearch = (search || "").toLowerCase();
 
-    let rows = data.filter(
-      (item) =>
-        item.title.toLowerCase().includes(q) ||
-        item.position.toLowerCase().includes(q) 
+    let rows = data.filter((item) =>
+      item.title.toLowerCase().includes(safeSearch)
     );
 
-    if (sort === "title") {
-      rows.sort((a, b) => a.title.localeCompare(b.title));
+    if (sort === "name") {
+      rows = [...rows].sort((a, b) =>
+        a.title.localeCompare(b.title)
+      );
     }
 
-    if (sort === "oldest") rows.reverse();
+    if (sort === "newest") {
+      rows = [...rows].reverse();
+    }
 
     return rows;
   }, [data, search, sort]);

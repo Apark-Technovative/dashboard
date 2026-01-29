@@ -8,7 +8,6 @@ import {
   HiChevronRight,
 } from "react-icons/hi";
 
-import CloudImage from "./CloudImage";
 
 const PAGE_SIZE = 6;
 
@@ -41,7 +40,7 @@ const [deleting, setDeleting] = useState(false);
       );
     }
 
-    if (sort === "oldest") {
+    if (sort === "newest") {
       rows = [...rows].reverse();
     }
 

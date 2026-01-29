@@ -3,16 +3,21 @@ import { HiX } from "react-icons/hi";
 import { toast } from "react-toastify";
 import { HiEye, HiEyeOff } from "react-icons/hi";
 
-export default function AddAdminModal({ onClose, onSave }) {
+export default function AddAdminModal({ onClose, onSave, currentUserRole }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [role, setRole] = useState("admin");
+  
+const [role, setRole] = useState("admin");
+
+
 const [showPassword, setShowPassword] = useState(false);
 const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
     const [loading, setLoading] = useState(false);
-  
+
+  console.log("currentUserRole:", currentUserRole);
+
 const handleSubmit = async () => {
   if (loading) return; 
 
@@ -27,7 +32,6 @@ const handleSubmit = async () => {
 
     setLoading(true); 
     await onSave({ name, email, role, password, confirmPassword });
-    toast.success("Admin created successfully");
     onClose();
   } catch (error) {
     toast.error("Failed to create admin");
@@ -71,21 +75,24 @@ const handleSubmit = async () => {
           />
           </div>
 
- <div>
-            <label className="block text-sm text-[#666666] mb-1">
-                Role
-          </label>
-            <select
-            value={role}
-            onChange={(e) => setRole(e.target.value)}
-            className="w-full border  border-[#66666659]/75 rounded-lg px-4 py-2"
-          >
-            <option value="admin">Admin</option>
-            <option value="superAdmin">Super Admin</option>
-          </select>
-            </div>
+ {currentUserRole === "superAdmin" && (
+  <div>
+    <label className="block text-sm text-[#666666] mb-1">
+      Role
+    </label>
+    <select
+      value={role}
+      onChange={(e) => setRole(e.target.value)}
+      className="w-full border border-[#66666659]/75 rounded-lg px-4 py-2"
+    >
+      <option value="admin">Admin</option>
+      <option value="superAdmin">Super Admin</option>
+    </select>
+  </div>
+)}
 
- <div>
+
+<div>
                 <div className="flex justify-between items-center">
             <label className="block text-sm text-[#666666] mb-1">
                Password
