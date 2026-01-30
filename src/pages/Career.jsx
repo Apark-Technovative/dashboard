@@ -75,7 +75,8 @@ export default function Career() {
   lg:ml-64
 ">
        
-
+  <TopSearch onSearch={setSearch} />
+          
 
         {/* Card */}
         <div className="bg-white rounded-2xl shadow-sm p-4 sm:p-6">
