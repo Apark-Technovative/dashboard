@@ -1,6 +1,6 @@
 import { useState, useEffect} from "react";
 import { HiSearch, HiChevronDown } from "react-icons/hi";
-import Sidebar from "../components/SideBar";
+
 import FaqTable  from "../components/FaqTable";
 import AddFaqModal from "../components/AddFaqModal";
 import TopSearch from "../components/TopSearch";
@@ -49,7 +49,6 @@ export default function Faq() {
     }
   };
 
-  /* DELETE */
   const handleDelete = async (id) => {
     try {
       await api.delete(`/faqs/${id}`);
@@ -60,15 +59,14 @@ export default function Faq() {
     }
   };
 
-  /* EDIT */
+ 
   const handleEdit = (item) => {
     setEditFaq(item);
     setShowModal(true);
   };
 
   return (
-    <div className="flex min-h-screen bg-[#FAFBFF]">
-      <Sidebar />
+    <div className="flex min-h-screen bg-[#FAFBFF]">    
 <main className="
   flex-1 h-screen overflow-y-auto
   p-4 sm:p-6 lg:p-8
@@ -77,9 +75,7 @@ export default function Faq() {
 
            <TopSearch onSearch={setSearch} />
 
-        {/* Card */}
         <div className="bg-white rounded-2xl shadow-sm p-4 sm:p-6">
-          {/* Header */}
            <SearchSort
                       title="FAQs"
                       search={search}
@@ -89,7 +85,6 @@ export default function Faq() {
                       onAdd={() => setShowModal(true)}
                     />
 
-          {/* Table */}
           < div className="overflow-x-auto">
            <FaqTable
            data={faqs}
@@ -102,7 +97,6 @@ export default function Faq() {
         </div>
       </main>
 
-      {/* Modal */}
      
       {showModal && (
         <AddFaqModal

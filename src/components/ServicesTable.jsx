@@ -12,8 +12,6 @@ import {
 
 
 const PAGE_SIZE = 6;
-// const IMAGE_URL = import.meta.env.VITE_API_IMAGE_URL;
-
 export default function ServicesTable({
   data = [],
   search = "",
@@ -76,14 +74,26 @@ const confirmDelete = async () => {
 
         <table className="w-full table-fixed text-sm">
           <thead>
-            <tr className="text-gray-400 border-b border-[#EEEEEE]">
-             <th className="lg:w-[22%] px-4 py-3 text-left">Title</th>
-  <th className="lg:w-[18%] px-4 py-3 text-left">Image</th>
-  <th className="lg:w-[35%] px-4 py-3 text-left">Description</th>
-  <th className="lg:w-[15%] px-4 py-3 text-left">Status</th>
-  <th className="lg:w-[10%] px-4 py-3 text-center">Action</th>
-            </tr>
-          </thead>
+  <tr className="text-gray-400 border-b border-[#EEEEEE]">
+    <th className="lg:w-[30%] px-4 py-3 text-left">
+      Title
+    </th>
+
+    <th className="lg:w-[30%] px-4 py-3 text-left">
+      Image
+    </th>
+
+    <th className="lg:w-[20%] px-4 py-3 text-left">
+      Status
+    </th>
+
+    <th className="lg:w-[9%] px-6 py-3 text-center">
+      Action
+    </th>
+  </tr>
+</thead>
+
+
 
           <tbody>
             {paginatedData.map((item, i) => (
@@ -103,11 +113,6 @@ const confirmDelete = async () => {
     />
                   )}
                 </td>
-
-                <td className="py-4 px-5 break-words line-clamp-3 sm:line-clamp-2">
-                  {item.description}
-                </td>
-
                  <td className="py-4 px-2">
                   <span
                     className={`w-18 h-8 flex items-center justify-center rounded-sm 

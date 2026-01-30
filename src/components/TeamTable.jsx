@@ -23,8 +23,6 @@ export default function TeamTable({
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 const [selectedId, setSelectedId] = useState(null);
 const [deleting, setDeleting] = useState(false);
-
-  /* FILTER + SORT (SAFE) */
   const filteredData = useMemo(() => {
     const safeSearch = (search || "").toLowerCase();
 
@@ -60,8 +58,6 @@ const [deleting, setDeleting] = useState(false);
     setSelectedId(null);
   }
 };
-
-  /* PAGINATION */
   const totalPages = Math.ceil(filteredData.length / PAGE_SIZE);
   const start = (page - 1) * PAGE_SIZE;
   const paginatedData = filteredData.slice(start, start + PAGE_SIZE);
@@ -104,16 +100,14 @@ const [deleting, setDeleting] = useState(false);
 
   return (
     <div className="w-full mt-4">
-      {/* TABLE */}
       <div className="w-full overflow-x-auto">
         <table className="w-full table-fixed text-sm">
           <thead>
            < tr className="text-gray-400 border-b border-[#EEEEEE]">
-              <th className="lg:w-[22%] px-4 py-3 text-left">Team Member Name</th>
-              <th className="lg:w-[18%] px-4 py-3 text-left">Position</th>
-              <th className="lg:w-[35%] px-4 py-3 text-left">Description</th>
-              <th className="lg:w-[15%] px-4 py-3 text-left">Status</th>
-              <th className="lg:w-[10%] px-4 py-3 text-center">Action</th>
+              <th className="lg:w-[30%] px-4 py-3 text-left">Team Member Name</th>
+              <th className="lg:w-[30%] px-4 py-3 text-left">Position</th>
+              <th className="lg:w-[20%] px-4 py-3 text-left">Status</th>
+              <th className="lg:w-[9%] px-4 py-3 text-center">Action</th>
     </tr>
           </thead>
           
@@ -132,11 +126,6 @@ const [deleting, setDeleting] = useState(false);
                <td className="py-4 px-5 max-w-[180px] truncate overflow-hidden">
   {item.position}
 </td>
-
-<td className="py-4 px-5 break-words line-clamp-3 sm:line-clamp-2">
-  {item.description}
-</td>
-
                 <td className="py-4 px-2">
                  <span
   className={`w-18 h-8 flex items-center justify-center rounded-sm 
@@ -181,19 +170,13 @@ const [deleting, setDeleting] = useState(false);
           </tbody>
         </table>
       </div>
-
-    {/* Divider */}
           <div className="border-t border-[#EEEEEE] mt-4" />
-    
-          {/* FOOTER */}
           <div className="flex justify-between items-center mt-2 text-sm text-gray-400">
             <p>
               Showing data {start + 1} to{" "}
               {Math.min(start + PAGE_SIZE, filteredData.length)} of{" "}
               {filteredData.length} entries
             </p>
-    
-            {/* PAGINATION */}
             <div className="flex items-center gap-2">
               <button
                 disabled={page === 1}

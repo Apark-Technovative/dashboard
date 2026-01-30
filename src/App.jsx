@@ -6,6 +6,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Faq from "./pages/Faq";
 import Team from "./pages/Team";
 import Career from "./pages/Career";
+import JobApplication from "./pages/JobApplication";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
@@ -24,71 +25,13 @@ export default function App() {
           <Route path="/faq" element={ <Faq />} />
           <Route path="/team" element={ <Team />} />
           <Route path="/career" element={ <Career /> } />
+          <Route path="/job" element={ <JobApplication /> } />
           <Route path="/setting" element={ <Settings />}  />
          
 
         </Route>  
  <Route path="*" element={<NotFound />} />
-        
-        {/* Protected routes
-        <Route
-          path="/"
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/services"
-          element={
-            <ProtectedRoute>
-              <Services />
-            </ProtectedRoute>
-          }
-        />
-        
-        <Route
-          path="/faq"
-          element={
-            <ProtectedRoute>
-              <Faq />
-            </ProtectedRoute>
-          }
-          />
-
-          
-            <Route
-          path="/team"
-          element={
-            <ProtectedRoute>
-              <Team />
-            </ProtectedRoute>
-          }
-          />
-
-<Route
-          path="/career"
-          element={
-            <ProtectedRoute>
-              <Career />
-            </ProtectedRoute>
-          }
-          />
-
-
-          <Route
-          path="/setting"
-          element={
-            <ProtectedRoute>
-              <Settings />
-            </ProtectedRoute>
-          }
-          /> */}
-
-          
-      </Routes>
+    </Routes>
     </BrowserRouter>
   );
 }

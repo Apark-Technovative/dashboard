@@ -71,12 +71,11 @@ const filteredData = useMemo(() => {
         <table className="w-full table-fixed text-sm">
          <thead>
   <tr className="text-gray-400 border-b border-[#EEEEEE]">
-    <th className="lg:w-[18%] px-4 py-3 text-left">Title</th>
-    <th className="lg:w-[14%] px-4 py-3 text-left">Position</th>
-    <th className="lg:w-[16%] px-4 py-3 text-left">Experience</th>
-    <th className="lg:w-[26%] px-4 py-3 text-left">Description</th>
-    <th className="lg:w-[16%] px-4 py-3 text-left">Deadline</th>
-    <th className="lg:w-[10%] px-4 py-3 text-center">Action</th>
+    <th className="lg:w-[20%] px-4 py-3 text-left">Title</th>
+    <th className="lg:w-[20%] px-4 py-3 text-left">Position</th>
+    <th className="lg:w-[20%] px-4 py-3 text-left">Experience</th>
+    <th className="lg:w-[20%] px-4 py-3 text-left">Deadline</th>
+    <th className="lg:w-[9%] px-4 py-3 text-center">Action</th>
   </tr>
 </thead>
 
@@ -98,11 +97,6 @@ const filteredData = useMemo(() => {
                 <td className="px-5 py-4 break-words ">
                  {item.experienceRequired}
                 </td>
-
-                <td className="py-4 px-5 break-words line-clamp-3 sm:line-clamp-2">
-                 {item.description}
-                </td>
-
                 <td className="py-4 px-5">
                   {item.deadline}
                 </td>

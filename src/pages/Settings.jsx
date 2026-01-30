@@ -1,6 +1,5 @@
 import { useState, useEffect} from "react";
-import { HiSearch, HiChevronDown } from "react-icons/hi";
-import Sidebar from "../components/SideBar";
+import TopSearch from "../components/TopSearch";
 import SettingTable from "../components/SettingTable";
 import AddAdminModal from "../components/AddAdminModal";
 import ChangePasswordModal from "../components/ChangePasswordModal";
@@ -62,31 +61,13 @@ const fetchCurrentAdmin = async () => {
 
   return (
     <div className="flex min-h-screen bg-[#FAFBFF]">
-      <Sidebar />
-
 <main className="
   flex-1 h-screen overflow-y-auto
   p-4 sm:p-6 lg:p-8
   lg:ml-64
 ">       <div className="flex justify-end  mb-[70px]">
       <div className="relative w-[260px] h-[40px]">
-        <HiSearch
-          size={22}
-          className="absolute left-3 top-1/2 -translate-y-1/2 text-[#7E7E7E]"
-        />
-            <input
-              type="text"
-              placeholder="Search"
-              onChange={(e) => setSearch(e.target.value)}
-             className="
-            w-full h-full pl-10 pr-4 rounded-xl bg-white
-            text-sm
-            placeholder:text-[#B5B7C0]
-            placeholder:text-[14px]
-            shadow-[0_6px_12px_rgba(226,236,249,0.5)]
-            focus:outline-none focus:ring-2 focus:ring-[#007BFF]
-          "
-            />
+         <TopSearch onSearch={setSearch} />
           </div>
         </div>
 

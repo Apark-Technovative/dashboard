@@ -22,6 +22,7 @@ const menu = [
   { name: "Faq", path: "/faq", icon: HiOutlineQuestionMarkCircle },
   { name: "Teams", path: "/team", icon: GoPeople },
   { name: "Career", path: "/career", icon: PiLadderDuotone },
+  { name: "Job Application", path: "/job", icon: PiLadderDuotone },
   { name: "Settings", path: "/setting", icon:  RiUserSettingsLine  },
 ];
 

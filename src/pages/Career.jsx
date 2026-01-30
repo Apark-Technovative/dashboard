@@ -1,5 +1,4 @@
 import { useState, useEffect} from "react";
-import Sidebar from "../components/SideBar";
 import CareerTable from "../components/CareerTable";
 import AddCareerModal from "../components/AddCareerModal";
 import TopSearch from "../components/TopSearch";
@@ -68,15 +67,14 @@ export default function Career() {
 
   return (
     <div className="flex min-h-screen bg-[#FAFBFF]">
-      <Sidebar />
+     
 
 <main className="
   flex-1 h-screen overflow-y-auto
   p-4 sm:p-6 lg:p-8
   lg:ml-64
 ">
-       {/* Top Search */}
-        <TopSearch onSearch={setSearch} />
+       
 
 
         {/* Card */}

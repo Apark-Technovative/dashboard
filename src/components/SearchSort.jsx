@@ -28,7 +28,7 @@ export default function SearchSort({
               w-full h-full pl-10 pr-4 rounded-lg bg-[#F9FBFF]
               text-xs placeholder:text-[#B5B7C0]
               focus:outline-none
-            "
+"
           />
         </div>
 

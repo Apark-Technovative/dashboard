@@ -63,7 +63,7 @@ export default function Services() {
   
   return (
     <div className="flex min-h-screen bg-[#FAFBFF]">
-      <Sidebar />
+      
 
       <main className="
   flex-1 h-screen overflow-y-auto
@@ -71,13 +71,8 @@ export default function Services() {
   lg:ml-64
 ">
 
-        {/* Top Search */}
         <TopSearch onSearch={setSearch} />
-
-
-        {/* Card */}
-        <div className="bg-white rounded-2xl shadow-sm p-4 sm:p-6">
-          {/* Header */}
+      <div className="bg-white rounded-2xl shadow-sm p-4 sm:p-6">
           <SearchSort
             title="All Services"
             search={search}
