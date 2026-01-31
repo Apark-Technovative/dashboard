@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
-import { HiEye, HiChevronLeft, HiChevronRight } from "react-icons/hi";
+import {HiChevronLeft, HiChevronRight } from "react-icons/hi";
+import { CiPlay1 } from "react-icons/ci";
 import JobApplicationViewModal from "./JobApplicationViewModal";
 
 const PAGE_SIZE = 6;
@@ -62,8 +63,8 @@ export default function JobApplicationTable({
                 <td className="px-4 py-5">
                   {new Date(item.appliedOn).toLocaleDateString()}
                 </td>
-                <td className="px-4 py-5 text-center">
-                  <HiEye
+                <td className="px-11 py-5 text-center">
+                  <CiPlay1
                     onClick={() => setSelectedId(item._id)}
                     className="text-lg cursor-pointer hover:scale-110 transition"
                   />

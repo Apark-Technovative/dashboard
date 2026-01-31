@@ -5,7 +5,7 @@ import api from "../api/axios";
 import { PiLadderDuotone } from "react-icons/pi";
 import { GoPeople } from "react-icons/go";
 import { RiUserSettingsLine } from "react-icons/ri";
-
+import { MdWorkOutline } from "react-icons/md";
 import {
   HiOutlineViewGrid,
   HiOutlineCog,
@@ -22,7 +22,7 @@ const menu = [
   { name: "Faq", path: "/faq", icon: HiOutlineQuestionMarkCircle },
   { name: "Teams", path: "/team", icon: GoPeople },
   { name: "Career", path: "/career", icon: PiLadderDuotone },
-  { name: "Job Application", path: "/job", icon: PiLadderDuotone },
+  { name: "Job Application", path: "/job", icon:  MdWorkOutline },
   { name: "Settings", path: "/setting", icon:  RiUserSettingsLine  },
 ];
 

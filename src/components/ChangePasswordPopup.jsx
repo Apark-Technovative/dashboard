@@ -44,7 +44,7 @@ const handleSubmit = async () => {
         {/* Close */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+          className="absolute top-4 right-4 cursor-pointer text-gray-400 hover:text-gray-600"
         >
           <HiX size={20} />
         </button>
