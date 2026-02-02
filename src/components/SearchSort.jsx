@@ -58,12 +58,14 @@ export default function SearchSort({
         </div>
 
         {/* Add */}
+         {onAdd && (
         <button
           onClick={onAdd}
           className="ml-4 bg-[#007BFF] text-white px-5 py-2 rounded-lg cursor-pointer"
         >
           Add
         </button>
+         )}
       </div>
     </div>
   );

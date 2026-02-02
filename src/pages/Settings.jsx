@@ -1,14 +1,20 @@
 import { useState, useEffect} from "react";
-import TopSearch from "../components/TopSearch";
 import SettingTable from "../components/SettingTable";
 import AddAdminModal from "../components/AddAdminModal";
+import TopSearch from "../components/TopSearch";
+import SearchSort from "../components/SearchSort";
 import ChangePasswordModal from "../components/ChangePasswordModal";
 import api from "../api/axios";
 import { toast } from "react-toastify";
 
 export default function Settings() {
   const [admins, setAdmins] = useState([]);
-  const [search, setSearch] = useState("");
+ const [total, setTotal] = useState(0);
+ const [search, setSearch] = useState("");
+  const [sort, setSort] = useState("-createdAt"); 
+  const [page, setPage] = useState(1);
+  const limit = 6;
+
   const [currentUserRole, setCurrentUserRole] = useState(null);
   const [showAddModal, setShowAddModal] = useState(false);
   const [editAdmin, setEditAdmin] = useState(null);
@@ -16,8 +22,17 @@ export default function Settings() {
 
  const fetchAdmins = async () => {
   try {
-    const res = await api.get("/getAllAdmin");
+    const res = await api.get("/getAllAdmin", {
+         params: {
+          keyword: search,
+          sort,
+          page,
+          limit,
+        },
+      });
     setAdmins(res.data.data);
+        setTotal(res.data.count);
+
   } catch (error) {
     toast.error("Failed to fetch admin data");
     console.error(error);
@@ -37,11 +52,13 @@ const fetchCurrentAdmin = async () => {
 
   useEffect(() => {
     fetchAdmins();
-    fetchCurrentAdmin();
     document.title = "Settings | Admin Panel";
-  }, []);
+  }, [search, sort, page]);
 
-  /* ADD ADMIN */
+useEffect(() => {
+  fetchCurrentAdmin();
+}, []);
+
   const handleAdd = async (data) => {
     try {
       await api.post("/register", data);
@@ -67,29 +84,52 @@ const fetchCurrentAdmin = async () => {
   lg:ml-64
 ">       <div className="flex justify-end  mb-[70px]">
       <div className="relative w-[260px] h-[40px]">
-         <TopSearch onSearch={setSearch} />
-          </div>
+<TopSearch
+          onSearch={(value) => {
+            setPage(1);
+            setSearch(value);
+          }}
+        />
+                  </div>
         </div>
 
         
         <div className="bg-white rounded-2xl shadow-sm p-4 sm:p-6">
-          <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start gap-4 mb-6">
-            <h2 className="text-xl font-semibold">Settings</h2>
-                <div className=" mt-2 mr-8">
-               <button
-              onClick={() => setShowAddModal(true)}
-              className="bg-[#007BFF] text-white px-5 py-2 rounded-lg cursor-pointer"
-            >
-              Add User
-            </button>
-            </div>
-          </div>
-
-          {/* Table */}
+         
+           <SearchSort
+            title="Settings"
+            search={search}
+          sort={
+              sort === "-createdAt"
+                ? "newest"
+                : sort === "createdAt"
+                ? "oldest"
+                : "name"
+            }  onSearch={(value) => {
+              setPage(1);
+              setSearch(value);
+            }}
+            onSort={(value) => {
+              setPage(1);
+          
+              const sortMap = {
+                newest: "-createdAt",
+                oldest: "createdAt",
+                name: "name",
+              };
+          
+              setSort(sortMap[value]); 
+            }}
+            onAdd={() => setShowAddModal(true)}
+          />
+          
           < div className="overflow-x-auto">
            <SettingTable
             data={admins}
-            search={search}
+              page={page}
+              limit={limit}
+              total={total}
+              onPageChange={setPage}
             onEdit={handleEdit}
           />
           </div>

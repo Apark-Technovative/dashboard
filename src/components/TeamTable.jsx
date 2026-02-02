@@ -8,42 +8,21 @@ import {
   HiChevronRight,
 } from "react-icons/hi";
 
-
-const PAGE_SIZE = 6;
-
-
 export default function TeamTable({
-  data = [],
-  search = "",
-  sort = "newest",
+ data = [],
+  page,
+  limit,
+  total,
+  onPageChange,
   onDelete,
   onEdit,
 }) {
-  const [page, setPage] = useState(1);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 const [selectedId, setSelectedId] = useState(null);
 const [deleting, setDeleting] = useState(false);
-  const filteredData = useMemo(() => {
-    const safeSearch = (search || "").toLowerCase();
-
-    let rows = data.filter((item) =>
-      item.name.toLowerCase().includes(safeSearch) ||
-      item.position.toLowerCase().includes(safeSearch)
-    );
-
   
-    if (sort === "name") {
-      rows = [...rows].sort((a, b) =>
-        a.name.localeCompare(b.name)
-      );
-    }
-
-    if (sort === "newest") {
-      rows = [...rows].reverse();
-    }
-
-    return rows;
-  }, [data, search, sort]);
+const totalPages = Math.ceil(total / limit);
+  const start = (page - 1) * limit;
 
   const confirmDelete = async () => {
   try {
@@ -58,45 +37,8 @@ const [deleting, setDeleting] = useState(false);
     setSelectedId(null);
   }
 };
-  const totalPages = Math.ceil(filteredData.length / PAGE_SIZE);
-  const start = (page - 1) * PAGE_SIZE;
-  const paginatedData = filteredData.slice(start, start + PAGE_SIZE);
 
-  const handleDelete = (id) => {
-    toast(
-      ({ closeToast }) => (
-        <div>
-          <p className="text-sm font-medium mb-2">
-            Are you sure you want to delete this Team Member?
-          </p>
-  
-          <div className="flex gap-2 justify-end">
-            <button
-              onClick={() => {
-                onDelete(id);
-                toast.success("Team Member deleted");
-                closeToast();
-              }}
-              className="px-3 py-1 text-sm bg-red-600 text-white rounded cursor-pointer"
-            >
-              Delete
-            </button>
-  
-            <button
-              onClick={closeToast}
-              className="px-3 py-1 text-sm bg-gray-300 rounded cursor-pointer"
-            >
-              Cancel
-            </button>
-          </div>
-        </div>
-      ),
-      {
-        autoClose: false,
-        closeOnClick: false,
-      }
-    );
-  };
+ 
 
   return (
     <div className="w-full mt-4">
@@ -113,9 +55,9 @@ const [deleting, setDeleting] = useState(false);
           
 
            <tbody>
-            {paginatedData.map((item, i) => (
+           {data.map((item) => (
               <tr
-                key={i}
+                key={item._id}
                 className="border-b border-[#EEEEEE] last:border-none"
               >
 
@@ -157,7 +99,7 @@ const [deleting, setDeleting] = useState(false);
                 </td>
               </tr>
             ))}
-             {paginatedData.length === 0 && (
+              {data.length === 0 && (
               <tr>
                 <td
                   colSpan="6"
@@ -172,11 +114,10 @@ const [deleting, setDeleting] = useState(false);
       </div>
           <div className="border-t border-[#EEEEEE] mt-4" />
           <div className="flex justify-between items-center mt-2 text-sm text-gray-400">
-            <p>
-              Showing data {start + 1} to{" "}
-              {Math.min(start + PAGE_SIZE, filteredData.length)} of{" "}
-              {filteredData.length} entries
-            </p>
+           <p>
+          Showing {total === 0 ? 0 : start + 1} to{" "}
+          {Math.min(start + limit, total)} of {total} entries
+        </p>
             <div className="flex items-center gap-2">
               <button
                 disabled={page === 1}
@@ -239,7 +180,6 @@ const [deleting, setDeleting] = useState(false);
   {deleting ? "Deleting..." : "Delete"}
 </button>
 
-
       </div>
     </div>
   </div>
@@ -249,3 +189,12 @@ const [deleting, setDeleting] = useState(false);
     }
     
     
+
+
+
+
+
+
+
+
+

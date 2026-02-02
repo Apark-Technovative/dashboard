@@ -1,6 +1,4 @@
 import { useState, useEffect} from "react";
-import { HiSearch, HiChevronDown } from "react-icons/hi";
-
 import FaqTable  from "../components/FaqTable";
 import AddFaqModal from "../components/AddFaqModal";
 import TopSearch from "../components/TopSearch";
@@ -9,15 +7,27 @@ import api from "../api/axios";
  
 export default function Faq() {
  const [faqs, setFaqs] = useState([]);
-  const [search, setSearch] = useState("");
-  const [sort, setSort] = useState("newest");
+  const [total, setTotal] = useState(0);
+ const [search, setSearch] = useState("");
+  const [sort, setSort] = useState("-createdAt"); 
+  const [page, setPage] = useState(1);
+  const limit = 6;
+
   const [showModal, setShowModal] = useState(false);
   const [editFaq, setEditFaq] = useState(null);
 
  const fetchFaqs = async () => {
     try {
-      const res = await api.get("/faqs");
+      const res = await api.get("/faqs", {
+         params: {
+          keyword: search,
+          sort,
+          page,
+          limit,
+        },
+      });
       setFaqs(res.data.data);
+       setTotal(res.data.count);
     } catch (error) {
       if (error.response?.status === 401) {
         console.warn("Not authenticated");
@@ -30,7 +40,7 @@ export default function Faq() {
   useEffect(() => {
     fetchFaqs();
     document.title = "Faq | Admin Panel";
-  }, []);
+  }, [search, sort, page]);
 
   const handleSave = async (payload, id) => {
     try {
@@ -72,27 +82,52 @@ export default function Faq() {
   p-4 sm:p-6 lg:p-8
   lg:ml-64
 ">
-
-           <TopSearch onSearch={setSearch} />
+ <TopSearch
+          onSearch={(value) => {
+            setPage(1);
+            setSearch(value);
+          }}
+        />
 
         <div className="bg-white rounded-2xl shadow-sm p-4 sm:p-6">
-           <SearchSort
-                      title="FAQs"
-                      search={search}
-                      sort={sort}
-                      onSearch={setSearch}
-                      onSort={setSort}
-                      onAdd={() => setShowModal(true)}
-                    />
+          <SearchSort
+  title="FAQs"
+  search={search}
+sort={
+    sort === "-createdAt"
+      ? "newest"
+      : sort === "createdAt"
+      ? "oldest"
+      : "name"
+  }  onSearch={(value) => {
+    setPage(1);
+    setSearch(value);
+  }}
+  onSort={(value) => {
+    setPage(1);
+
+    const sortMap = {
+      newest: "-createdAt",
+      oldest: "createdAt",
+      name: "question",
+    };
+
+    setSort(sortMap[value]); 
+  }}
+  onAdd={() => setShowModal(true)}
+/>
+
 
           < div className="overflow-x-auto">
            <FaqTable
-           data={faqs}
-            search={search}
-            sort={sort}
-            onDelete={handleDelete}
-          onEdit={handleEdit}
-          />
+              data={faqs}
+              page={page}
+              limit={limit}
+              total={total}
+              onPageChange={setPage}
+              onDelete={handleDelete}
+              onEdit={handleEdit}
+            />
           </div>
         </div>
       </main>

@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import {useState } from "react";
 import { toast } from "react-toastify";
 import CloudImage from "./CloudImage";
 
@@ -10,50 +10,23 @@ import {
 } from "react-icons/hi";
 
 
-
-const PAGE_SIZE = 6;
 export default function ServicesTable({
-  data = [],
-  search = "",
-  sort = "newest",
+   data = [],
+  page,
+  limit,
+  total,
+  onPageChange,
   onDelete,
   onEdit,
 }) {
-  const [page, setPage] = useState(1);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 const [selectedId, setSelectedId] = useState(null);
 const [deleting, setDeleting] = useState(false);
 
+const totalPages = Math.ceil(total / limit);
+  const start = (page - 1) * limit;
 
-
-  /* FILTER + SORT (SAFE) */
-  const filteredData = useMemo(() => {
-    const safeSearch = (search || "").toLowerCase();
-
-    let rows = data.filter((item) =>
-      item.title.toLowerCase().includes(safeSearch)
-    );
-
-    if (sort === "name") {
-      rows = [...rows].sort((a, b) =>
-        a.title.localeCompare(b.title)
-      );
-    }
-
-    if (sort === "oldest") {
-      rows = [...rows].reverse();
-    }
-
-    return rows;
-  }, [data, search, sort]);
-
-  /* PAGINATION */
-  const totalPages = Math.ceil(filteredData.length / PAGE_SIZE);
-  const start = (page - 1) * PAGE_SIZE;
-  const paginatedData = filteredData.slice(start, start + PAGE_SIZE);
-
-
-const confirmDelete = async () => {
+  const confirmDelete = async () => {
   try {
     setDeleting(true);
     await onDelete(selectedId);
@@ -96,9 +69,9 @@ const confirmDelete = async () => {
 
 
           <tbody>
-            {paginatedData.map((item, i) => (
+        {data.map((item) => (
               <tr
-                key={i}
+                key={item._id}
                 className="border-b border-[#EEEEEE] last:border-none"
               >
                 <td className="py-4 px-5 font-medium break-words">
@@ -145,7 +118,7 @@ const confirmDelete = async () => {
                 </td>
               </tr>
             ))}
-             {paginatedData.length === 0 && (
+             {data.length === 0 && (
               <tr>
                 <td
                   colSpan="6"
@@ -165,16 +138,15 @@ const confirmDelete = async () => {
       {/* FOOTER */}
       <div className="flex justify-between items-center mt-2 text-sm text-gray-400">
         <p>
-          Showing data {start + 1} to{" "}
-          {Math.min(start + PAGE_SIZE, filteredData.length)} of{" "}
-          {filteredData.length} entries
+          Showing {total === 0 ? 0 : start + 1} to{" "}
+          {Math.min(start + limit, total)} of {total} entries
         </p>
 
         {/* PAGINATION */}
         <div className="flex items-center gap-2">
           <button
             disabled={page === 1}
-            onClick={() => setPage((p) => p - 1)}
+            onClick={() => onPageChange(page - 1)}
             className="w-8 h-8 flex items-center justify-center rounded-md border
                        cursor-pointer disabled:cursor-not-allowed disabled:opacity-40"
           >
@@ -184,7 +156,7 @@ const confirmDelete = async () => {
           {Array.from({ length: totalPages }).map((_, i) => (
             <button
               key={i}
-              onClick={() => setPage(i + 1)}
+              onClick={() => onPageChange(i + 1)}
               className={`w-8 h-8 rounded-md text-sm cursor-pointer
                 ${page === i + 1 ? "bg-[#5932EA] text-white" : "border"}`}
             >
@@ -194,7 +166,7 @@ const confirmDelete = async () => {
 
           <button
             disabled={page === totalPages}
-            onClick={() => setPage((p) => p + 1)}
+            onClick={() => onPageChange(page + 1)}
             className="w-8 h-8 flex items-center justify-center rounded-md border
                        cursor-pointer disabled:cursor-not-allowed disabled:opacity-40"
           >

@@ -7,16 +7,28 @@ import api from "../api/axios";
 
 export default function Career() {
   const [careers, setCareers] = useState([]);
-  const [search, setSearch] = useState("");
-  const [sort, setSort] = useState("newest");
+  const [total, setTotal] = useState(0);
+ const [search, setSearch] = useState("");
+  const [sort, setSort] = useState("-createdAt"); 
+  const [page, setPage] = useState(1);
+  const limit = 6;
+
   const [showModal, setShowModal] = useState(false);
   const [editCareer, setEditCareer] = useState(null);;
 
-  /* FETCH */
+  
    const fetchCareers = async () => {
     try {
-      const res = await api.get("/career");
+      const res = await api.get("/career", {
+         params: {
+          keyword: search,
+          sort,
+          page,
+          limit,
+        },
+      });
       setCareers(res.data.data);
+      setTotal(res.data.count);
     } catch (error) {
       console.error("Error fetching careers:", error);
     }
@@ -25,11 +37,10 @@ export default function Career() {
   useEffect(() => {
     fetchCareers();
       document.title = "Career | Admin Panel";
-  }, []);
+  }, [search, sort, page]);
 
 
 
-  /* SAVE (ADD + EDIT) */
   const handleSave = async (formData, id) => {
     try {
       if (id) {
@@ -46,7 +57,6 @@ export default function Career() {
     }
   };
 
-  /* DELETE */
   const handleDelete = async (id) => {
     try {
       await api.delete(`/career/${id}`);
@@ -57,49 +67,64 @@ export default function Career() {
     }
   };
 
-  /* EDIT */
   const handleEdit = (item) => {
     setEditCareer(item);
     setShowModal(true);
   };
  
-
-
   return (
     <div className="flex min-h-screen bg-[#FAFBFF]">
-     
-
 <main className="
   flex-1 h-screen overflow-y-auto
   p-4 sm:p-6 lg:p-8
   lg:ml-64
 ">
        
-  <TopSearch onSearch={setSearch} />
+  <TopSearch
+            onSearch={(value) => {
+              setPage(1);
+              setSearch(value);
+            }}
+          />
           
 
-        {/* Card */}
         <div className="bg-white rounded-2xl shadow-sm p-4 sm:p-6">
-          {/* Header */}
-          <SearchSort
+<SearchSort
             title="Careers"
-            search={search}
-            sort={sort}
-            onSearch={setSearch}
-            onSort={setSort}
+             search={search}
+          sort={
+              sort === "-createdAt"
+                ? "newest"
+                : sort === "createdAt"
+                ? "oldest"
+                : "name"
+            }  onSearch={(value) => {
+              setPage(1);
+              setSearch(value);
+            }}
+            onSort={(value) => {
+              setPage(1);
+          
+              const sortMap = {
+                newest: "-createdAt",
+                oldest: "createdAt",
+                name: "question",
+              };
+          
+              setSort(sortMap[value]); 
+            }}
             onAdd={() => setShowModal(true)}
           />
-
-
-          {/* Table */}
           <div className="overflow-x-auto">
-            <CareerTable
-              data={careers}
-              search={search}
-              sort={sort}
-              onDelete={handleDelete}
-              onEdit={handleEdit}
-            />
+            <CareerTable 
+                          data={careers}
+                          page={page}
+                          limit={limit}
+                          total={total}
+                          onPageChange={setPage}
+                        onDelete={handleDelete}
+                      onEdit={handleEdit}
+                      />
           </div>
         </div>
       </main>

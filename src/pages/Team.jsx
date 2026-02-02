@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import Sidebar from "../components/SideBar";
 import TeamTable from "../components/TeamTable";
 import AddTeamModal from "../components/AddTeamModal";
 import TopSearch from "../components/TopSearch";
@@ -8,15 +7,27 @@ import api from "../api/axios";
 
 export default function Team() {
   const [team, setTeam] = useState([]);
-  const [search, setSearch] = useState("");
-  const [sort, setSort] = useState("newest");
+  const [total, setTotal] = useState(0);
+ const [search, setSearch] = useState("");
+  const [sort, setSort] = useState("-createdAt"); 
+  const [page, setPage] = useState(1);
+  const limit = 6;
+
   const [showModal, setShowModal] = useState(false);
   const [editTeam, setEditTeam] = useState(null);
 
  const fetchTeam = async () => {
     try {
-      const res = await api.get("/team");
+      const res = await api.get("/team", {
+         params: {
+          keyword: search,
+          sort,
+          page,
+          limit,
+        },
+      });
       setTeam(res.data.data);
+       setTotal(res.data.count);
     } catch (error) {
       console.error("Error fetching team:", error);
     }
@@ -25,9 +36,8 @@ export default function Team() {
   useEffect(() => {
     fetchTeam();
       document.title = "Teams | Admin Panel";
-  }, []);
+  }, [search, sort, page]);
 
-  /* SAVE (ADD + EDIT) */
   const handleSave = async (formData, id) => {
     try {
       if (id) {
@@ -45,7 +55,7 @@ export default function Team() {
     }
   };
 
-  /* DELETE */
+ 
   const handleDelete = async (id) => {
     try {
       await api.delete(`/team/${id}`);
@@ -56,7 +66,7 @@ export default function Team() {
     }
   };
 
-  /* EDIT */
+ 
   const handleEdit = (item) => {
     setEditTeam(item);
     setShowModal(true);
@@ -64,36 +74,54 @@ export default function Team() {
 
   return (
     <div className="flex min-h-screen bg-[#FAFBFF]">
-      <Sidebar />
 <main className="
   flex-1 h-screen overflow-y-auto
   p-4 sm:p-6 lg:p-8
   lg:ml-64
 ">
 
-        <TopSearch onSearch={setSearch} />
-
+<TopSearch
+          onSearch={(value) => {
+            setPage(1);
+            setSearch(value);
+          }}
+        />
         <div className="bg-white rounded-2xl shadow-sm p-6">
-          <SearchSort
-            title="Team Members"
-            search={search}
-            sort={sort}
-            onSearch={setSearch}
-            onSort={setSort}
-            onAdd={() => {
-              setEditTeam(null);   
-              setShowModal(true);
+<SearchSort
+ title="Team Members"             search={search}
+          sort={
+              sort === "-createdAt"
+                ? "newest"
+                : sort === "createdAt"
+                ? "oldest"
+                : "name"
+            }  onSearch={(value) => {
+              setPage(1);
+              setSearch(value);
             }}
+            onSort={(value) => {
+              setPage(1);
+          
+              const sortMap = {
+                newest: "-createdAt",
+                oldest: "createdAt",
+                name: "question",
+              };
+          
+              setSort(sortMap[value]); 
+            }}
+            onAdd={() => setShowModal(true)}
           />
-
           <div className="overflow-x-auto">
             <TeamTable
-              data={team}
-              search={search}
-              sort={sort}
-              onDelete={handleDelete}
-              onEdit={handleEdit}
-            />
+                      data={team}
+                          page={page}
+                          limit={limit}
+                          total={total}
+                          onPageChange={setPage}
+                        onDelete={handleDelete}
+                      onEdit={handleEdit}
+                      />
           </div>
         </div>
       </main>

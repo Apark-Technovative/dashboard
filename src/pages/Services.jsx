@@ -1,5 +1,4 @@
 import { useState, useEffect} from "react";
-import Sidebar from "../components/SideBar";
 import ServicesTable from "../components/ServicesTable";
 import AddServiceModal from "../components/AddServiceModal";
 import TopSearch from "../components/TopSearch";
@@ -8,15 +7,27 @@ import api from "../api/axios";
 
 export default function Services() {
  const [services, setServices] = useState([]);
-  const [search, setSearch] = useState("");
-  const [sort, setSort] = useState("newest");
+ const [total, setTotal] = useState(0);
+ const [search, setSearch] = useState("");
+  const [sort, setSort] = useState("-createdAt"); 
+  const [page, setPage] = useState(1);
+  const limit = 6;
+  
   const [showModal, setShowModal] = useState(false);
   const [editService, setEditService] = useState(null);
 
   const fetchServices = async () => {
     try {
-      const res = await api.get("/getServices");
+      const res = await api.get("/getServices", {
+         params: {
+          keyword: search,
+          sort,
+          page,
+          limit,
+        },
+      });
       setServices(res.data.data);
+         setTotal(res.data.count);
     } catch (error) {
       console.error("Error fetching services:", error);
     }
@@ -25,7 +36,7 @@ export default function Services() {
   useEffect(() => {
     fetchServices();
     document.title = "Services | Admin Panel";
-  }, []);
+  }, [search, sort, page]);
   const handleSave = async (formData, id) => {
     try {
       if (id) {
@@ -55,7 +66,6 @@ export default function Services() {
 };
 
 
-  /* EDIT */
   const handleEdit = (item) => {
     setEditService(item);
     setShowModal(true);
@@ -71,24 +81,47 @@ export default function Services() {
   lg:ml-64
 ">
 
-        <TopSearch onSearch={setSearch} />
-      <div className="bg-white rounded-2xl shadow-sm p-4 sm:p-6">
+<TopSearch
+          onSearch={(value) => {
+            setPage(1);
+            setSearch(value);
+          }}
+        />
+              <div className="bg-white rounded-2xl shadow-sm p-4 sm:p-6">
           <SearchSort
-            title="All Services"
-            search={search}
-            sort={sort}
-            onSearch={setSearch}
-            onSort={setSort}
+ title="All Services"
+             search={search}
+          sort={
+              sort === "-createdAt"
+                ? "newest"
+                : sort === "createdAt"
+                ? "oldest"
+                : "name"
+            }  onSearch={(value) => {
+              setPage(1);
+              setSearch(value);
+            }}
+            onSort={(value) => {
+              setPage(1);
+          
+              const sortMap = {
+                newest: "-createdAt",
+                oldest: "createdAt",
+                name: "question",
+              };
+          
+              setSort(sortMap[value]); 
+            }}
             onAdd={() => setShowModal(true)}
           />
-
-
-          {/* Table */}
+        
           < div className="overflow-x-auto">
            <ServicesTable
-           data={services}
-            search={search}
-            sort={sort}
+          data={services}
+              page={page}
+              limit={limit}
+              total={total}
+              onPageChange={setPage}
             onDelete={handleDelete}
           onEdit={handleEdit}
           />
