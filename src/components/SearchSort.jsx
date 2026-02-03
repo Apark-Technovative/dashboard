@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { HiSearch, HiChevronDown } from "react-icons/hi";
 
 export default function SearchSort({
@@ -7,7 +8,11 @@ export default function SearchSort({
   onSearch,
   onSort,
   onAdd,
-}) {
+})
+ {
+  const [localSearch, setLocalSearch] = useState(search || "");
+
+ 
   return (
     <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start gap-4 mb-6">
       <h2 className="text-xl font-semibold">{title}</h2>
@@ -15,22 +20,30 @@ export default function SearchSort({
       <div className="flex flex-wrap items-center gap-2 mt-2 mr-8">
         {/* Search */}
         <div className="relative w-full sm:w-[216px] h-[38px]">
-          <HiSearch
-            size={22}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-[#7E7E7E]"
-          />
-          <input
-            type="text"
-            placeholder="Search"
-            value={search}
-            onChange={(e) => onSearch(e.target.value)}
-            className="
-              w-full h-full pl-10 pr-4 rounded-lg bg-[#F9FBFF]
-              text-xs placeholder:text-[#B5B7C0]
-              focus:outline-none
-"
-          />
-        </div>
+  <input
+    type="text"
+    placeholder="Search"
+    value={localSearch}
+    onChange={(e) => setLocalSearch(e.target.value)}
+    className="
+      w-full h-full pr-10 pl-4 rounded-lg bg-[#F9FBFF]
+      text-xs placeholder:text-[#B5B7C0]
+      focus:outline-none
+    "
+  />
+
+  <HiSearch
+    size={20}
+    onClick={() => onSearch(localSearch)}
+    className="
+      absolute right-3 top-1/2 -translate-y-1/2
+      text-[#7E7E7E] cursor-pointer
+      hover:text-[#5932EA]
+    "
+  />
+</div>
+
+
 
         {/* Sort */}
         <div className="relative w-[154px] h-[38px]">
@@ -70,3 +83,4 @@ export default function SearchSort({
     </div>
   );
 }
+

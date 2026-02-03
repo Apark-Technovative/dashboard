@@ -13,7 +13,7 @@ export default function AddTeamModal({ onClose, onSave, initialData }) {
   const [position, setPosition] = useState("");
     const [description, setDescription] = useState("");
   const [status, setStatus] = useState("active");
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState([]);
   const [preview, setPreview] = useState(null);
   const [removedImage, setRemovedImage] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -144,12 +144,9 @@ if (!editor || editor.isEmpty)
       setRemovedImage([initialData.image[0]]);
     }
 
-    if (preview?.startsWith("blob:")) {
-      URL.revokeObjectURL(preview);
-    }
-
+    
     setImage(file);
-    setPreview(URL.createObjectURL(file));
+    setPreview([URL.createObjectURL(file)]);
   };
 
 
@@ -229,14 +226,14 @@ if (!editor || editor.isEmpty)
               <div className="w-20 h-20 bg-gray-200 rounded-lg flex items-center justify-center">
                 {preview ? (
                   <div className="relative w-full h-full">
-                    {preview.startsWith("blob:") ? (
+                    {preview[0].startsWith("blob:") ? (
                       <img
-                        src={preview}
+                        src={preview[0]}
                         className="w-full h-full object-cover rounded-lg"
                       />
                     ) : (
                       <CloudImage
-                        publicId={preview}
+                        publicId={preview[0]}
                         className="w-full h-full object-cover rounded-lg"
                       />
                     )}

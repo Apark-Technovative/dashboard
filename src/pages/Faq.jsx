@@ -1,7 +1,6 @@
 import { useState, useEffect} from "react";
 import FaqTable  from "../components/FaqTable";
 import AddFaqModal from "../components/AddFaqModal";
-import TopSearch from "../components/TopSearch";
 import SearchSort from "../components/SearchSort";
 import api from "../api/axios";
  
@@ -11,7 +10,7 @@ export default function Faq() {
  const [search, setSearch] = useState("");
   const [sort, setSort] = useState("-createdAt"); 
   const [page, setPage] = useState(1);
-  const limit = 6;
+  const limit = 20;
 
   const [showModal, setShowModal] = useState(false);
   const [editFaq, setEditFaq] = useState(null);
@@ -82,40 +81,35 @@ export default function Faq() {
   p-4 sm:p-6 lg:p-8
   lg:ml-64
 ">
- <TopSearch
-          onSearch={(value) => {
-            setPage(1);
-            setSearch(value);
-          }}
-        />
+
 
         <div className="bg-white rounded-2xl shadow-sm p-4 sm:p-6">
           <SearchSort
   title="FAQs"
   search={search}
-sort={
+  sort={
     sort === "-createdAt"
       ? "newest"
       : sort === "createdAt"
       ? "oldest"
       : "name"
-  }  onSearch={(value) => {
+  }
+  onSearch={(value) => {
     setPage(1);
     setSearch(value);
   }}
   onSort={(value) => {
     setPage(1);
-
     const sortMap = {
       newest: "-createdAt",
       oldest: "createdAt",
       name: "question",
     };
-
-    setSort(sortMap[value]); 
+    setSort(sortMap[value]);
   }}
   onAdd={() => setShowModal(true)}
 />
+
 
 
           < div className="overflow-x-auto">
@@ -146,8 +140,4 @@ sort={
     </div>
   );
 }
-
-
-
-
 

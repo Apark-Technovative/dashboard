@@ -1,7 +1,6 @@
 import { useState, useEffect} from "react";
 import SettingTable from "../components/SettingTable";
 import AddAdminModal from "../components/AddAdminModal";
-import TopSearch from "../components/TopSearch";
 import SearchSort from "../components/SearchSort";
 import ChangePasswordModal from "../components/ChangePasswordModal";
 import api from "../api/axios";
@@ -13,7 +12,7 @@ export default function Settings() {
  const [search, setSearch] = useState("");
   const [sort, setSort] = useState("-createdAt"); 
   const [page, setPage] = useState(1);
-  const limit = 6;
+  const limit = 20;
 
   const [currentUserRole, setCurrentUserRole] = useState(null);
   const [showAddModal, setShowAddModal] = useState(false);
@@ -82,16 +81,7 @@ useEffect(() => {
   flex-1 h-screen overflow-y-auto
   p-4 sm:p-6 lg:p-8
   lg:ml-64
-">       <div className="flex justify-end  mb-[70px]">
-      <div className="relative w-[260px] h-[40px]">
-<TopSearch
-          onSearch={(value) => {
-            setPage(1);
-            setSearch(value);
-          }}
-        />
-                  </div>
-        </div>
+">      
 
         
         <div className="bg-white rounded-2xl shadow-sm p-4 sm:p-6">

@@ -1,4 +1,3 @@
-import Sidebar from "../components/SideBar";
 import { useEffect } from "react";
 
 export default function Dashboard() {
@@ -7,7 +6,7 @@ export default function Dashboard() {
   }, []);
   return (
     <div className="flex min-h-screen ">
-      <Sidebar />
+      
 
       <main className="ml-64 flex-1 p-8">
       

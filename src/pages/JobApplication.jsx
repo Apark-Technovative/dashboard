@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import TopSearch from "../components/TopSearch";
 import SearchSort from "../components/SearchSort";
 
 import JobApplicationTable from "../components/JobApplicationTable";
@@ -12,7 +11,7 @@ const [total, setTotal] = useState(0);
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("-createdAt");
   const [page, setPage] = useState(1);
-  const limit = 6;
+  const limit = 20;
   
 
   const loadApplications = async () => {
@@ -43,12 +42,7 @@ const [total, setTotal] = useState(0);
   p-4 sm:p-6 lg:p-8
   lg:ml-64
 ">     
-<TopSearch
-          onSearch={(value) => {
-            setPage(1);
-            setSearch(value);
-          }}
-        />          
+         
         <div className="bg-white rounded-2xl shadow-sm p-4 sm:p-6">
 <SearchSort         
  title="Job Applications"

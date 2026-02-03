@@ -1,7 +1,6 @@
 import { useState, useEffect} from "react";
 import CareerTable from "../components/CareerTable";
 import AddCareerModal from "../components/AddCareerModal";
-import TopSearch from "../components/TopSearch";
 import SearchSort from "../components/SearchSort";
 import api from "../api/axios";
 
@@ -11,7 +10,7 @@ export default function Career() {
  const [search, setSearch] = useState("");
   const [sort, setSort] = useState("-createdAt"); 
   const [page, setPage] = useState(1);
-  const limit = 6;
+  const limit = 20;
 
   const [showModal, setShowModal] = useState(false);
   const [editCareer, setEditCareer] = useState(null);;
@@ -78,17 +77,7 @@ export default function Career() {
   flex-1 h-screen overflow-y-auto
   p-4 sm:p-6 lg:p-8
   lg:ml-64
-">
-       
-  <TopSearch
-            onSearch={(value) => {
-              setPage(1);
-              setSearch(value);
-            }}
-          />
-          
-
-        <div className="bg-white rounded-2xl shadow-sm p-4 sm:p-6">
+">     <div className="bg-white rounded-2xl shadow-sm p-4 sm:p-6">
 <SearchSort
             title="Careers"
              search={search}

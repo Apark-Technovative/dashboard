@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import TeamTable from "../components/TeamTable";
 import AddTeamModal from "../components/AddTeamModal";
-import TopSearch from "../components/TopSearch";
 import SearchSort from "../components/SearchSort";
 import api from "../api/axios";
 
@@ -11,7 +10,7 @@ export default function Team() {
  const [search, setSearch] = useState("");
   const [sort, setSort] = useState("-createdAt"); 
   const [page, setPage] = useState(1);
-  const limit = 6;
+  const limit = 20;
 
   const [showModal, setShowModal] = useState(false);
   const [editTeam, setEditTeam] = useState(null);
@@ -79,13 +78,6 @@ export default function Team() {
   p-4 sm:p-6 lg:p-8
   lg:ml-64
 ">
-
-<TopSearch
-          onSearch={(value) => {
-            setPage(1);
-            setSearch(value);
-          }}
-        />
         <div className="bg-white rounded-2xl shadow-sm p-6">
 <SearchSort
  title="Team Members"             search={search}
