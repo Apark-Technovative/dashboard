@@ -119,7 +119,7 @@ if (!editor || editor.isEmpty)
     } finally {
     }
   };
-
+console.log(preview);
   const handleRemoveImage = () => {
     if (initialData?.image?.[0] && removedImage.length === 0) {
       setRemovedImage([initialData.image[0]]);
@@ -233,7 +233,7 @@ if (!editor || editor.isEmpty)
                       />
                     ) : (
                       <CloudImage
-                        publicId={preview[0]}
+                        publicId={preview}
                         className="w-full h-full object-cover rounded-lg"
                       />
                     )}
